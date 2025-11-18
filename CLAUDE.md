@@ -38,7 +38,7 @@ by using the "context7" mcp.
 
 ## TEST methodology
 When a test file is created with mocking please ensure that the mocked methods, functions, classes or even modules are
-real by using "create_spec". Example:
+real by using "create_autospec". Example:
 ```python
 from unittest.mock import create_autospec
 import mio_modulo
