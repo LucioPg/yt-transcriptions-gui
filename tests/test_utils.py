@@ -15,12 +15,15 @@ def test_sanitize_filename():
     from src.utils import sanitize_filename
 
     # Basic sanitization
-    assert sanitize_filename("Hello World") == "Hello World"
-    assert sanitize_filename("Hello: World") == "Hello World"
+    assert sanitize_filename("Hello World") == "Hello_World"
+    assert sanitize_filename("Hello: World") == "Hello_World"
     assert sanitize_filename('Hello/World\\Test') == "HelloWorldTest"
 
     # Multiple spaces
-    assert sanitize_filename("Hello    World") == "Hello World"
+    assert sanitize_filename("Hello    World") == "Hello_World"
+
+    # Multiple underscores
+    assert sanitize_filename("Hello   World") == "Hello_World"
 
     # Long titles
     long_title = "A" * 250

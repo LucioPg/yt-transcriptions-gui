@@ -32,37 +32,24 @@ def get_transcript(video_url: str, language: str = None):
         # Extract video ID from URL
         video_id = _extract_video_id(video_url)
 
-        # Get transcript list to find available languages
-        transcript_list = YouTubeTranscriptApi.list_transcripts(video_id)
+        # Try to get transcript with language preference
+        api = YouTubeTranscriptApi()
 
         if language:
             # Try to get transcript in specified language
             try:
-                transcript = transcript_list.find_transcript([language])
-                return transcript.fetch()
+                return api.fetch(video_id, languages=[language])
             except:
-                # Fallback to manually created transcript in specified language
-                try:
-                    transcript = transcript_list.find_manually_created_transcript([language])
-                    return transcript.fetch()
-                except:
-                    pass
+                pass
 
-        # Get first available transcript (usually original language)
+        # Get transcript in default language (English)
         try:
-            transcript = list(transcript_list)[0]  # Get first available
-            return transcript.fetch()
-        except:
-            # Last resort: try to get any generated transcript
-            for transcript in transcript_list:
-                if not transcript.is_generated:
-                    return transcript.fetch()
-
-            # If no manual transcripts, get first generated one
-            for transcript in transcript_list:
-                return transcript.fetch()
-
-        raise NoTranscriptAvailableError("No transcript available for this video")
+            return api.fetch(video_id)
+        except Exception as e:
+            if "No transcripts found" in str(e) or "Video unavailable" in str(e):
+                raise NoTranscriptAvailableError(f"No transcript available: {str(e)}")
+            else:
+                raise  # Re-raise unexpected errors
 
     except Exception as e:
         if "No transcripts found" in str(e) or "Video unavailable" in str(e):

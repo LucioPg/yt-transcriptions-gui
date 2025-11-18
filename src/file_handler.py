@@ -24,7 +24,14 @@ def save_transcript(content: str, title: str, format_type: str, output_dir: str 
 def format_transcript(transcript_data, format_type: str) -> str:
     """Format transcript data according to specified format."""
     if format_type.lower() == "txt":
-        return "\n".join(entry['text'] for entry in transcript_data)
+        # Handle both dictionary and object access patterns
+        text_lines = []
+        for entry in transcript_data:
+            if hasattr(entry, 'text'):
+                text_lines.append(entry.text)
+            else:
+                text_lines.append(entry['text'])
+        return "\n".join(text_lines)
     elif format_type.lower() == "srt":
         return _format_srt(transcript_data)
     elif format_type.lower() == "vtt":
@@ -36,18 +43,38 @@ def _format_srt(transcript_data):
     """Format transcript as SRT subtitles."""
     srt_content = []
     for i, entry in enumerate(transcript_data, 1):
-        start_time = _seconds_to_srt_time(entry['start'])
-        end_time = _seconds_to_srt_time(entry['start'] + entry['duration'])
-        srt_content.append(f"{i}\n{start_time} --> {end_time}\n{entry['text']}\n")
+        # Handle both dictionary and object access patterns
+        if hasattr(entry, 'text'):
+            text = entry.text
+            start = entry.start
+            duration = entry.duration
+        else:
+            text = entry['text']
+            start = entry['start']
+            duration = entry['duration']
+
+        start_time = _seconds_to_srt_time(start)
+        end_time = _seconds_to_srt_time(start + duration)
+        srt_content.append(f"{i}\n{start_time} --> {end_time}\n{text}\n")
     return "\n".join(srt_content)
 
 def _format_vtt(transcript_data):
     """Format transcript as VTT subtitles."""
     vtt_content = ["WEBVTT\n"]
     for entry in transcript_data:
-        start_time = _seconds_to_vtt_time(entry['start'])
-        end_time = _seconds_to_vtt_time(entry['start'] + entry['duration'])
-        vtt_content.append(f"{start_time} --> {end_time}\n{entry['text']}\n")
+        # Handle both dictionary and object access patterns
+        if hasattr(entry, 'text'):
+            text = entry.text
+            start = entry.start
+            duration = entry.duration
+        else:
+            text = entry['text']
+            start = entry['start']
+            duration = entry['duration']
+
+        start_time = _seconds_to_vtt_time(start)
+        end_time = _seconds_to_vtt_time(start + duration)
+        vtt_content.append(f"{start_time} --> {end_time}\n{text}\n")
     return "\n".join(vtt_content)
 
 def _seconds_to_srt_time(seconds):

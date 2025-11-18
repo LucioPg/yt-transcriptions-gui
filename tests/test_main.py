@@ -1,6 +1,6 @@
 # tests/test_main.py
 import pytest
-from unittest.mock import patch
+from unittest.mock import patch, Mock
 import sys
 from io import StringIO
 
@@ -34,10 +34,18 @@ def test_cli_argument_parsing_with_options():
 def test_main_function_success():
     from src.main import main
 
-    mock_transcript = [
-        {'text': 'Hello world', 'start': 0.0, 'duration': 2.5},
-        {'text': 'This is a test', 'start': 2.5, 'duration': 3.0}
-    ]
+    # Mock transcript objects as returned by YouTubeTranscriptApi.fetch()
+    mock_snippet1 = Mock()
+    mock_snippet1.text = "Hello world"
+    mock_snippet1.start = 0.0
+    mock_snippet1.duration = 2.5
+
+    mock_snippet2 = Mock()
+    mock_snippet2.text = "This is a test"
+    mock_snippet2.start = 2.5
+    mock_snippet2.duration = 3.0
+
+    mock_transcript = [mock_snippet1, mock_snippet2]
 
     with patch('src.main.get_transcript') as mock_get:
         with patch('src.main.get_video_title') as mock_title:
@@ -61,3 +69,78 @@ def test_main_function_success():
                 assert "Transcript saved to:" in output
                 assert "Format: txt" in output
                 assert "Lines: 2" in output
+
+def test_main_function_invalid_url():
+    """Test main function with invalid URL."""
+    from src.main import main
+
+    # Capture stderr
+    captured_error = StringIO()
+
+    with patch('sys.stderr', captured_error):
+        with pytest.raises(SystemExit) as exc_info:
+            main(["https://www.google.com"])
+
+    assert exc_info.value.code == 1
+    error_output = captured_error.getvalue()
+    assert "Error: Invalid YouTube URL:" in error_output
+    assert "https://www.google.com" in error_output
+
+def test_main_function_no_transcript_available():
+    """Test main function when no transcript is available."""
+    from src.main import main
+    from src.transcriptor import NoTranscriptAvailableError
+
+    # Mock get_transcript to raise NoTranscriptAvailableError
+    with patch('src.main.get_transcript') as mock_get:
+        mock_get.side_effect = NoTranscriptAvailableError("No transcript found")
+
+        # Capture stderr
+        captured_error = StringIO()
+
+        with patch('sys.stderr', captured_error):
+            with pytest.raises(SystemExit) as exc_info:
+                main(["https://youtu.be/test123"])
+
+        assert exc_info.value.code == 1
+        error_output = captured_error.getvalue()
+        assert "Error: No transcript found" in error_output
+
+def test_main_function_invalid_video_url():
+    """Test main function when video URL is invalid."""
+    from src.main import main
+    from src.transcriptor import InvalidVideoURLError
+
+    # Mock get_transcript to raise InvalidVideoURLError
+    with patch('src.main.get_transcript') as mock_get:
+        mock_get.side_effect = InvalidVideoURLError("Invalid video URL")
+
+        # Capture stderr
+        captured_error = StringIO()
+
+        with patch('sys.stderr', captured_error):
+            with pytest.raises(SystemExit) as exc_info:
+                main(["https://youtu.be/test123"])
+
+        assert exc_info.value.code == 1
+        error_output = captured_error.getvalue()
+        assert "Error: Invalid video URL" in error_output
+
+def test_main_function_unexpected_error():
+    """Test main function with unexpected error."""
+    from src.main import main
+
+    # Mock get_transcript to raise unexpected error
+    with patch('src.main.get_transcript') as mock_get:
+        mock_get.side_effect = ValueError("Database connection failed")
+
+        # Capture stderr
+        captured_error = StringIO()
+
+        with patch('sys.stderr', captured_error):
+            with pytest.raises(SystemExit) as exc_info:
+                main(["https://youtu.be/test123"])
+
+        assert exc_info.value.code == 1
+        error_output = captured_error.getvalue()
+        assert "Unexpected error: Database connection failed" in error_output
