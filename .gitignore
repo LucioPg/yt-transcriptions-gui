@@ -5,6 +5,7 @@ uv.lock
 /.coverage
 htmlcov
 *.info
+*/*.egg-info
 transcriptions
 *.txt
 *.srt
