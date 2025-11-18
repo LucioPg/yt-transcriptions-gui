@@ -1,6 +1,6 @@
 # API Documentation
 
-This document provides detailed API documentation for the YouTube Transcriptor library, covering both core modules and the FastAPI web interface.
+This document provides detailed API documentation for the YouTube Transcriptor library, covering both core modules, the FastAPI web interface, and the CLI executable.
 
 ## Table of Contents
 
@@ -10,6 +10,10 @@ This document provides detailed API documentation for the YouTube Transcriptor l
   - [utils](#utils)
   - [main](#main)
   - [web_app](#web_app)
+- [CLI API](#cli-api)
+  - [Command Reference](#command-reference)
+  - [Exit Codes](#exit-codes)
+  - [CLI Examples](#cli-examples)
 - [Web API Endpoints](#web-api-endpoints)
 - [Exceptions](#exceptions)
 - [Data Structures](#data-structures)
@@ -283,6 +287,325 @@ Main CLI function that orchestrates the transcript extraction process.
 5. Format transcript
 6. Save to file
 7. Display summary
+
+## CLI API
+
+The CLI executable (`yt-transcriptor-cli.exe`) provides a command-line interface for transcript extraction with comprehensive argument parsing and error handling.
+
+### Command Reference
+
+#### Basic Usage
+
+```bash
+yt-transcriptor-cli.exe <URL> [OPTIONS]
+```
+
+#### Positional Arguments
+
+| Argument | Required | Description |
+|----------|----------|-------------|
+| `<URL>` | Yes | YouTube video URL to extract transcript from |
+
+#### Optional Arguments
+
+| Option | Short | Description | Default | Example |
+|--------|-------|-------------|---------|---------|
+| `--format` | `-f` | Output format (txt, srt, vtt) | `txt` | `--format srt` |
+| `--language` | `-l` | Language code (en, it, es, etc.) | auto-detect | `--language en` |
+| `--output` | `-o` | Output directory | `transcriptions` | `--output "C:\Docs"` |
+| `--help` | `-h` | Show help message and exit | - | `--help` |
+
+#### Supported Output Formats
+
+| Format | Extension | Description | Use Case |
+|--------|-----------|-------------|----------|
+| `txt` | `.txt` | Plain text transcript | Reading, documentation |
+| `srt` | `.srt` | SubRip subtitle format | Video players, captioning |
+| `vtt` | `.vtt` | WebVTT format | Web video, HTML5 players |
+
+#### Supported Language Codes
+
+| Code | Language | Code | Language |
+|------|----------|------|----------|
+| `en` | English | `es` | Spanish |
+| `it` | Italian | `fr` | French |
+| `de` | German | `pt` | Portuguese |
+| `ru` | Russian | `ja` | Japanese |
+| `ko` | Korean | `zh` | Chinese |
+| `ar` | Arabic | `hi` | Hindi |
+
+#### URL Formats Supported
+
+```
+https://www.youtube.com/watch?v=VIDEO_ID
+https://youtu.be/VIDEO_ID
+https://www.youtube.com/embed/VIDEO_ID
+https://m.youtube.com/watch?v=VIDEO_ID
+```
+
+### Exit Codes
+
+The CLI executable returns specific exit codes to indicate success or failure:
+
+| Exit Code | Meaning | Description |
+|-----------|---------|-------------|
+| `0` | Success | Transcript extracted and saved successfully |
+| `1` | Error | Invalid URL, no transcript available, or unexpected error |
+
+#### Exit Code Usage Examples
+
+```bash
+# Check if extraction was successful
+yt-transcriptor-cli.exe "https://youtu.be/VIDEO_ID"
+if %ERRORLEVEL% EQU 0 (
+    echo "Success: Transcript extracted"
+) else (
+    echo "Error: Failed to extract transcript"
+)
+```
+
+```powershell
+# PowerShell example
+& "yt-transcriptor-cli.exe" "https://youtu.be/VIDEO_ID"
+if ($LASTEXITCODE -eq 0) {
+    Write-Host "Success: Transcript extracted"
+} else {
+    Write-Host "Error: Failed to extract transcript"
+}
+```
+
+### CLI Examples
+
+#### Basic Usage
+
+```bash
+# Extract transcript in default format (TXT)
+yt-transcriptor-cli.exe "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+```
+
+**Output:**
+```
+Extracting transcript from: https://www.youtube.com/watch?v=dQw4w9WgXcQ
+Video title: Rick Astley - Never Gonna Give You Up (Official Music Video)
+Transcript saved to: transcriptions/Rick_Astley_Never_Gonna_Give_You_Up_Official_Music_Video.txt
+Format: txt
+Lines: 162
+```
+
+#### Format Selection
+
+```bash
+# Extract as SRT subtitles
+yt-transcriptor-cli.exe "https://youtu.be/dQw4w9WgXcQ" --format srt
+
+# Extract as VTT web subtitles
+yt-transcriptor-cli.exe "https://youtu.be/dQw4w9WgXcQ" -f vtt
+```
+
+#### Language Selection
+
+```bash
+# Extract English transcript specifically
+yt-transcriptor-cli.exe "https://youtu.be/dQw4w9WgXcQ" --language en
+
+# Extract Spanish transcript
+yt-transcriptor-cli.exe "https://youtu.be/dQw4w9WgXcQ" -l es
+```
+
+#### Custom Output Directory
+
+```bash
+# Save to custom directory
+yt-transcriptor-cli.exe "https://youtu.be/dQw4w9WgXcQ" --output "C:\My Documents\Transcripts"
+
+# Save to relative directory
+yt-transcriptor-cli.exe "https://youtu.be/dQw4w9WgXcQ" -o ./subtitles
+```
+
+#### Combined Options
+
+```bash
+# All options together
+yt-transcriptor-cli.exe "https://youtu.be/dQw4w9WgXcQ" \
+  --format srt \
+  --language en \
+  --output "C:\Subtitles"
+```
+
+#### Error Handling Examples
+
+```bash
+# Invalid URL
+yt-transcriptor-cli.exe "not-a-url"
+# Output: Error: Invalid YouTube URL: not-a-url
+
+# Video without transcript
+yt-transcriptor-cli.exe "https://youtu.be/VIDEO_WITH_NO_CAPTIONS"
+# Output: Error: No transcript available for this video
+```
+
+#### Help Command
+
+```bash
+# Show help message
+yt-transcriptor-cli.exe --help
+```
+
+**Output:**
+```
+usage: yt-transcriptor-cli.exe [-h] [--format {txt,srt,vtt}] [--language LANGUAGE]
+                               [--output OUTPUT]
+                               url
+
+Extract YouTube video transcripts
+
+positional arguments:
+  url                   YouTube video URL
+
+options:
+  -h, --help            show this help message and exit
+  --format {txt,srt,vtt}, -f {txt,srt,vtt}
+                        Output format (default: txt)
+  --language LANGUAGE, -l LANGUAGE
+                        Language code (e.g., en, it, es). If not specified, uses first available.
+  --output OUTPUT, -o OUTPUT
+                        Output directory (default: transcriptions)
+
+Examples:
+  yt-transcriptor-cli.exe "https://youtu.be/dQw4w9WgXcQ"
+  yt-transcriptor-cli.exe "https://youtu.be/dQw4w9WgXcQ" --format srt
+  yt-transcriptor-cli.exe "https://youtu.be/dQw4w9WgXcQ" --language en --output ./transcripts
+```
+
+### CLI Integration Examples
+
+#### Batch Processing (Windows)
+
+```batch
+@echo off
+echo Processing multiple videos...
+
+yt-transcriptor-cli.exe "https://www.youtube.com/watch?v=VIDEO1" --format srt
+if %ERRORLEVEL% EQU 0 (
+    echo ✓ VIDEO1 processed successfully
+) else (
+    echo ✗ VIDEO1 failed
+)
+
+yt-transcriptor-cli.exe "https://www.youtube.com/watch?v=VIDEO2" --format txt
+if %ERRORLEVEL% EQU 0 (
+    echo ✓ VIDEO2 processed successfully
+) else (
+    echo ✗ VIDEO2 failed
+)
+
+echo Batch processing complete
+```
+
+#### PowerShell Script
+
+```powershell
+# Process URLs from a file
+$urls = Get-Content "video_urls.txt"
+$outputDir = "C:\Transcripts"
+
+foreach ($url in $urls) {
+    Write-Host "Processing: $url"
+
+    $process = Start-Process -FilePath "yt-transcriptor-cli.exe" -ArgumentList $url, "--output", $outputDir -Wait -PassThru
+
+    if ($process.ExitCode -eq 0) {
+        Write-Host "✓ Success: $url" -ForegroundColor Green
+    } else {
+        Write-Host "✗ Failed: $url" -ForegroundColor Red
+    }
+}
+```
+
+#### Python Subprocess Integration
+
+```python
+import subprocess
+import json
+
+def extract_transcript_cli(url, format_type="txt", language=None, output_dir=None):
+    """Extract transcript using CLI executable."""
+
+    cmd = ["yt-transcriptor-cli.exe", url]
+
+    if format_type:
+        cmd.extend(["--format", format_type])
+    if language:
+        cmd.extend(["--language", language])
+    if output_dir:
+        cmd.extend(["--output", output_dir])
+
+    try:
+        result = subprocess.run(
+            cmd,
+            capture_output=True,
+            text=True,
+            check=True
+        )
+
+        return {
+            "success": True,
+            "output": result.stdout,
+            "error": result.stderr
+        }
+
+    except subprocess.CalledProcessError as e:
+        return {
+            "success": False,
+            "output": e.stdout,
+            "error": e.stderr,
+            "exit_code": e.returncode
+        }
+
+# Usage example
+result = extract_transcript_cli(
+    "https://youtu.be/dQw4w9WgXcQ",
+    format_type="srt",
+    language="en",
+    output_dir="./transcripts"
+)
+
+if result["success"]:
+    print("Transcript extracted successfully!")
+    print(result["output"])
+else:
+    print("Extraction failed!")
+    print(f"Error: {result['error']}")
+    print(f"Exit code: {result['exit_code']}")
+```
+
+### CLI Error Messages
+
+The CLI provides specific error messages for different failure scenarios:
+
+#### Invalid URL Error
+```
+Error: Invalid YouTube URL: INVALID_URL
+```
+**Cause**: The provided URL is not a valid YouTube URL format.
+
+#### No Transcript Error
+```
+Error: No transcript available for this video: REASON
+```
+**Cause**: The video doesn't have captions or transcripts available.
+
+#### Network/Connection Error
+```
+Error: Network error: CONNECTION_ERROR_MESSAGE
+```
+**Cause**: Unable to connect to YouTube or transcript service.
+
+#### File System Error
+```
+Error: File system error: ERROR_MESSAGE
+```
+**Cause**: Permission denied, disk full, or invalid output path.
 
 ### web_app
 

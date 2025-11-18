@@ -758,6 +758,136 @@ for x in range(10):
     squares.append(x**2)
 ```
 
+## Building Windows Executables
+
+### Prerequisites
+
+- Windows operating system
+- Python 3.13+ with uv package manager
+- Packaging dependencies: `uv sync --extra packaging`
+
+### Build Process
+
+#### Using Makefile (Recommended)
+
+```bash
+# Build both executables
+make build-all-exe
+
+# Build CLI executable only
+make build-cli-exe
+
+# Build web executable only
+make build-web-exe
+
+# Test executables
+make test-exe
+```
+
+#### Manual Build with PyInstaller
+
+```bash
+# Install packaging dependencies
+uv sync --extra packaging
+
+# Build CLI executable
+uv run pyinstaller --onefile --console \
+  --name "yt-transcriptor-cli" \
+  src/cli_main.py
+
+# Build Web executable
+uv run pyinstaller --onefile --windowed \
+  --add-data "src/templates;templates" \
+  --add-data "src/static;static" \
+  --name "yt-transcriptor-web" \
+  src/web_main.py
+```
+
+### Executable Specifications
+
+#### CLI Executable (yt-transcriptor-cli.exe)
+- **Entry Point**: `src/cli_main.py`
+- **Type**: Console application
+- **PyInstaller Options**: `--onefile --console`
+- **Target**: Command-line users and automation
+
+#### Web Executable (yt-transcriptor-web.exe)
+- **Entry Point**: `src/web_main.py`
+- **Type**: Windowed application
+- **PyInstaller Options**: `--onefile --windowed`
+- **Data Files**: Templates and static assets
+- **Target**: Everyday users with browser interface
+
+### Build Output
+
+After building, executables will be located in:
+- `dist/yt-transcriptor-cli.exe` - CLI executable
+- `dist/yt-transcriptor-web.exe` - Web executable
+
+### Testing Executables
+
+```bash
+# Test CLI executable
+dist/yt-transcriptor-cli.exe --help
+dist/yt-transcriptor-cli.exe "https://www.youtube.com/watch?v=VIDEO_ID"
+
+# Test web executable (manual process)
+# 1. Run dist/yt-transcriptor-web.exe
+# 2. Verify browser opens to http://localhost:8000
+# 3. Test transcript extraction through web interface
+# 4. Verify files saved to ~/yt-transcriptions/
+```
+
+### Distribution Considerations
+
+#### File Sizes
+- CLI executable: ~15-20 MB
+- Web executable: ~25-30 MB (includes templates/assets)
+
+#### Dependencies
+- Both executables are self-contained
+- No Python installation required on target machines
+- All dependencies bundled using PyInstaller
+
+#### Platform Compatibility
+- Currently Windows-specific
+- Linux/Mac builds can be added with additional PyInstaller configurations
+- Web executable may need platform-specific adjustments
+
+### Troubleshooting Builds
+
+#### Common Issues
+
+1. **Missing Data Files**
+   ```bash
+   # Ensure templates and static directories are included
+   --add-data "src/templates;templates" \
+   --add-data "src/static;static"
+   ```
+
+2. **Import Errors**
+   ```bash
+   # Use explicit hidden imports
+   --hidden-import=transcriptor \
+   --hidden-import=file_handler \
+   --hidden-import=utils
+   ```
+
+3. **Permission Issues**
+   ```bash
+   # Run as administrator on Windows if needed
+   # or adjust User Account Control settings
+   ```
+
+#### Debug Builds
+
+```bash
+# Create debug build for troubleshooting
+uv run pyinstaller --onefile --console --debug all \
+  --name "yt-transcriptor-cli-debug" \
+  src/cli_main.py
+```
+
 ## Release Process
 
 ### Version Management
@@ -782,16 +912,24 @@ flake8 src/ tests/
 # Update documentation
 # Update version in pyproject.toml
 # Update CHANGELOG.md
+
+# Test build process
+make clean
+make build-all-exe
 ```
 
 #### 2. Testing
 ```bash
 # Test installation
 pip install -e .
-python -m src.main --help
+python -m src.cli_main --help
+python -m src.web_main  # Test web interface
 
-# Test CLI script
-yt-transcriptor --help
+# Test CLI scripts
+yt-transcriptor-cli --help
+
+# Test executables
+make test-exe
 ```
 
 #### 3. Release
@@ -803,8 +941,14 @@ git push origin v0.1.0
 # Build package
 python -m build
 
+# Build executables
+make build-all-exe
+
 # Upload to PyPI (if applicable)
 python -m twine upload dist/*
+
+# Create GitHub Release with executables
+# Attach dist/*.exe files to release assets
 ```
 
 ## Troubleshooting

@@ -22,10 +22,20 @@ A lightweight, professional Python tool that extracts YouTube video transcripts 
 
 ### Prerequisites
 
-- Python 3.13+
+- Python 3.13+ (for development)
 - [uv](https://github.com/astral-sh/uv) package manager (recommended)
+- Windows (for executables)
 
-### Installation
+### Installation Options
+
+#### Option 1: Download Executables (Recommended for Users)
+
+Download the pre-built Windows executables from the [Releases](https://github.com/your-username/yt-transcriptor/releases) page:
+
+- **yt-transcriptor-web.exe** - User-friendly web interface
+- **yt-transcriptor-cli.exe** - Command-line interface for advanced users
+
+#### Option 2: Development Setup
 
 ```bash
 # Clone the repository
@@ -37,48 +47,81 @@ uv sync
 
 # Verify installation
 uv run python -m pytest tests/
+
+# Build executables (optional)
+make build-all-exe
 ```
 
 ## 📖 Usage
 
-### Web Interface (Recommended)
+### Windows Executables (Recommended)
 
-Start the web interface for a user-friendly experience:
+#### Web Interface - yt-transcriptor-web.exe
+
+Perfect for everyday users with a graphical interface:
 
 ```bash
-# Start the web server
-uv run python -m src.web_app
+# Run the web executable
+yt-transcriptor-web.exe
 
-# Then open your browser to http://localhost:8000
+# The application will:
+# - Start a local web server
+# - Open your browser automatically
+# - Save transcripts to ~/yt-transcriptions/
 ```
 
 The web interface provides:
-- 🎨 Clean, responsive design
+- 🎨 Clean, responsive web interface
 - 📝 Real-time transcript preview
-- 💾 Direct download in multiple formats
+- 💾 Direct download to your home folder
 - 🌍 Language selection
 - ❌ User-friendly error messages
+- 📁 Automatic organization in ~/yt-transcriptions/
 
-### CLI Usage
+#### CLI Interface - yt-transcriptor-cli.exe
 
-#### Basic Usage
+For power users and automation:
 
 ```bash
-# Extract transcript in default format (TXT)
-uv run python -m src.main "https://www.youtube.com/watch?v=VIDEO_ID"
+# Basic usage
+yt-transcriptor-cli.exe "https://www.youtube.com/watch?v=VIDEO_ID"
+
+# Advanced usage
+yt-transcriptor-cli.exe "https://www.youtube.com/watch?v=VIDEO_ID" \
+  --format srt \
+  --language en \
+  --output ./transcripts
+
+# Help
+yt-transcriptor-cli.exe --help
 ```
 
-#### Advanced Usage
+### Development Mode
+
+#### Web Interface (Development)
 
 ```bash
-# Extract with custom options
-uv run python -m src.main "https://www.youtube.com/watch?v=VIDEO_ID" \
+# Start the web server in development mode
+uv run python -m src.web_main
+
+# Then open your browser to http://localhost:8000
+# Note: This uses temporary files, not ~/yt-transcriptions/
+```
+
+#### CLI Interface (Development)
+
+```bash
+# Basic usage
+uv run python -m src.cli_main "https://www.youtube.com/watch?v=VIDEO_ID"
+
+# Advanced usage
+uv run python -m src.cli_main "https://www.youtube.com/watch?v=VIDEO_ID" \
   --format srt \
   --language en \
   --output ./transcripts
 ```
 
-### Command Options
+### CLI Command Options
 
 | Option | Short | Description | Default |
 |--------|-------|-------------|---------|
@@ -88,18 +131,36 @@ uv run python -m src.main "https://www.youtube.com/watch?v=VIDEO_ID" \
 
 ### Examples
 
+#### Windows Executables
+
 ```bash
 # Plain text transcript (default)
-uv run python -m src.main "https://youtu.be/dQw4w9WgXcQ"
+yt-transcriptor-cli.exe "https://youtu.be/dQw4w9WgXcQ"
 
 # SRT subtitles in English
-uv run python -m src.main "https://youtu.be/dQw4w9WgXcQ" --format srt --language en
+yt-transcriptor-cli.exe "https://youtu.be/dQw4w9WgXcQ" --format srt --language en
 
 # VTT format with custom output directory
-uv run python -m src.main "https://youtu.be/dQw4w9WgXcQ" --format vtt --output ./subtitles
+yt-transcriptor-cli.exe "https://youtu.be/dQw4w9WgXcQ" --format vtt --output ./subtitles
 
 # Using short options
-uv run python -m src.main "https://youtu.be/dQw4w9WgXcQ" -f srt -l en -o ./output
+yt-transcriptor-cli.exe "https://youtu.be/dQw4w9WgXcQ" -f srt -l en -o ./output
+```
+
+#### Development Mode
+
+```bash
+# Plain text transcript (default)
+uv run python -m src.cli_main "https://youtu.be/dQw4w9WgXcQ"
+
+# SRT subtitles in English
+uv run python -m src.cli_main "https://youtu.be/dQw4w9WgXcQ" --format srt --language en
+
+# VTT format with custom output directory
+uv run python -m src.cli_main "https://youtu.be/dQw4w9WgXcQ" --format vtt --output ./subtitles
+
+# Using short options
+uv run python -m src.cli_main "https://youtu.be/dQw4w9WgXcQ" -f srt -l en -o ./output
 ```
 
 ## 📁 Output Formats
@@ -138,22 +199,49 @@ Hello world, this is a transcript example.
 This is the second line of the transcript.
 ```
 
-## 🏗️ Architecture
+## 🏗️ Dual-Executable Architecture
+
+The YouTube Transcriptor features a dual-executable architecture designed for different user needs:
+
+### Architecture Overview
 
 ```
 YouTube Transcriptor
-├── CLI Interface (main.py)
-├── Core Logic (transcriptor.py)
-├── File Operations (file_handler.py)
-└── Utilities (utils.py)
+├── CLI Executable (yt-transcriptor-cli.exe)
+│   └── Console interface for power users
+├── Web Executable (yt-transcriptor-web.exe)
+│   └── Windows native app with browser interface
+└── Shared Core Logic
+    ├── transcriptor.py: YouTube API integration
+    ├── file_handler.py: File operations
+    ├── utils.py: Utilities and validation
+    └── web_app.py: FastAPI web framework
 ```
+
+### Executable Details
+
+#### yt-transcriptor-cli.exe
+- **Purpose**: Command-line interface for advanced users
+- **Target**: Developers, power users, automation scripts
+- **Output**: User-specified directory
+- **Interface**: Console with full argument support
+
+#### yt-transcriptor-web.exe
+- **Purpose**: User-friendly Windows application
+- **Target**: Everyday users, non-technical users
+- **Output**: ~/yt-transcriptions/ (automatic)
+- **Interface**: Browser-based with automatic launch
 
 ### Key Components
 
-- **main.py**: Command-line interface and user interaction
+- **cli_main.py**: CLI entry point and argument parsing
+- **web_main.py**: Web executable entry point
 - **transcriptor.py**: YouTube API integration and transcript extraction
 - **file_handler.py**: File operations and output formatting
 - **utils.py**: URL validation and text processing
+- **web_app.py**: FastAPI web interface
+- **templates/**: HTML templates for web interface
+- **static/**: CSS, JavaScript, and image assets
 
 ## 🧪 Testing
 
@@ -197,23 +285,71 @@ flake8 src/ tests/
 python -m build
 ```
 
+### Building Windows Executables
+
+#### Prerequisites
+- Windows operating system
+- Python 3.13+ with uv package manager
+
+#### Build Both Executables
+```bash
+# Build both CLI and web executables
+make build-all-exe
+
+# Or build individually
+make build-cli-exe    # Builds yt-transcriptor-cli.exe
+make build-web-exe    # Builds yt-transcriptor-web.exe
+```
+
+#### Manual Build Process
+```bash
+# Install packaging dependencies
+uv sync --extra packaging
+
+# Build CLI executable
+uv run pyinstaller --onefile --console --name "yt-transcriptor-cli" src/cli_main.py
+
+# Build Web executable
+uv run pyinstaller --onefile --windowed \
+  --add-data "src/templates;templates" \
+  --add-data "src/static;static" \
+  --name "yt-transcriptor-web" \
+  src/web_main.py
+```
+
+#### Executable Output
+- CLI executable: `dist/yt-transcriptor-cli.exe`
+- Web executable: `dist/yt-transcriptor-web.exe`
+
+#### Test Executables
+```bash
+# Test CLI executable
+dist/yt-transcriptor-cli.exe --help
+
+# Test web executable (requires manual run)
+dist/yt-transcriptor-web.exe
+```
+
 ### Project Structure
 
 ```
 yt-transcriptor/
 ├── src/                     # Source code
-│   ├── main.py             # CLI interface
+│   ├── cli_main.py         # CLI executable entry point
+│   ├── web_main.py         # Web executable entry point
+│   ├── main.py             # Legacy CLI interface (development)
 │   ├── transcriptor.py     # Core transcript extraction
 │   ├── file_handler.py     # File operations and formatting
 │   ├── utils.py            # Utility functions
-│   ├── web_app.py          # FastAPI web interface
+│   ├── web_app.py          # FastAPI web interface (development)
+│   ├── setup.py            # Package setup
 │   ├── templates/          # HTML templates for web interface
 │   │   ├── base.html       # Base layout with styling
 │   │   ├── index.html      # Homepage with extraction form
 │   │   └── result.html     # Results display page
 │   └── static/             # Static files (CSS, JS, images)
 ├── tests/                  # Test suite
-│   ├── test_main.py        # CLI tests
+│   ├── test_main.py        # Legacy CLI tests
 │   ├── test_transcriptor.py # Core logic tests
 │   ├── test_file_handler.py # File operations tests
 │   ├── test_utils.py       # Utility tests
@@ -226,9 +362,24 @@ yt-transcriptor/
 │   ├── DEVELOPMENT.md      # Development guide
 │   ├── WEB_INTERFACE.md    # Web interface documentation
 │   └── CHANGELOG.md        # Version history
+├── dist/                   # Built executables
+│   ├── yt-transcriptor-cli.exe    # CLI Windows executable
+│   └── yt-transcriptor-web.exe    # Web Windows executable
 ├── htmlcov/               # Coverage reports
-└── transcriptions/        # Default output directory
+├── transcriptions/        # Default CLI output directory
+└── yt-transcriptor-cli.spec # PyInstaller spec for CLI
 ```
+
+### Key Differences Between Executables
+
+| Feature | yt-transcriptor-cli.exe | yt-transcriptor-web.exe |
+|---------|------------------------|------------------------|
+| **Target Users** | Developers, power users | Everyday users |
+| **Interface** | Console/Command line | Web browser |
+| **Output Location** | User-specified | ~/yt-transcriptions/ |
+| **Arguments** | Full CLI argument support | Web form interface |
+| **Auto-launch** | No | Opens browser automatically |
+| **File Management** | Manual | Automatic with README |
 
 ## 📚 Documentation
 
@@ -243,8 +394,14 @@ yt-transcriptor/
 - [Changelog](docs/CHANGELOG.md) - Version history and changes
 
 ### Quick Links
-- 🌐 **Web Interface**: `uv run python -m src.web_app` → http://localhost:8000
-- 🔧 **CLI Tool**: `uv run python -m src.main "https://youtu.be/VIDEO_ID"`
+
+#### Windows Executables
+- 🌐 **Web Interface**: `yt-transcriptor-web.exe` → http://localhost:8000 (auto-launch)
+- 🔧 **CLI Tool**: `yt-transcriptor-cli.exe "https://youtu.be/VIDEO_ID"`
+
+#### Development Mode
+- 🌐 **Web Interface**: `uv run python -m src.web_main` → http://localhost:8000
+- 🔧 **CLI Tool**: `uv run python -m src.cli_main "https://youtu.be/VIDEO_ID"`
 - 📖 **API Docs**: http://localhost:8000/docs (when web server is running)
 
 ## 🔧 Dependencies

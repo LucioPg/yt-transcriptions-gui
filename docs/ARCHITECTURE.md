@@ -35,44 +35,44 @@ YouTube Transcriptor is a versatile Python application that provides both CLI an
 ```
                  ┌─────────────────────────────────────────────────────────┐
                  │                    YouTube Transcriptor                 │
-                 │                  (Dual-Interface System)               │
+                 │               (Dual-Executable System)                │
                  └─────────────────────────────────────────────────────────┘
                                       │
-                 ┌────────────────────┼────────────────────┐
-                 │                    │                    │
-        ┌────────▼────────┐  ┌───────▼───────┐   ┌────────▼─────────┐
-        │   CLI Interface │  │  Web Interface │   │  Shared Core     │
-        │    (main.py)    │  │  (web_app.py)  │   │   Modules        │
-        └─────────────────┘  └───────────────┘   └──────────────────┘
-                 │                    │                    │
-                 │                    │           ┌────────┴────────┐
-                 │                    │           │                 │
-                 ▼                    ▼    ┌──────▼─────┐   ┌───────▼──────┐
-        ┌─────────────────┐  ┌─────────────────┐ │ Transcript │   │ File Handler │
-        │   Argument      │  │   FastAPI App   │ │ Processor  │   │   Module     │
-        │   Processing    │  │   (HTTP/HTML)   │ │ (transcriptor) │ │ (file_handler)│
-        └─────────────────┘  └─────────────────┘ └─────────────┘   └──────────────┘
-                 │                    │                    │                 │
-                 │                    │                    │                 │
-                 ▼                    ▼                    ▼                 ▼
-        ┌─────────────────┐  ┌─────────────────┐   ┌─────────────────┐  ┌─────────────────┐
-        │   Command Line  │  │   HTTP Requests │   │   YouTube API   │  │   File System  │
-        │   Interaction   │  │   & Responses   │   │   Integration   │  │   Operations    │
-        └─────────────────┘  └─────────────────┘   └─────────────────┘  └─────────────────┘
-                 │                    │                    │                 │
-                 └────────────────────┴────────────────────┴─────────────────┘
-                                      │
-                                      ▼
-                        ┌─────────────────────────────┐
-                        │      Shared Utilities       │
-                        │        (utils.py)           │
-                        │  - URL Validation          │
-                        │  - Text Processing         │
-                        │  - Common Functions        │
-                        └─────────────────────────────┘
+        ┌─────────────────────────────┼───────────────────────────────────┐
+        │                             │                                   │
+┌───────▼────────┐          ┌────────▼────────┐              ┌───────────▼──────────┐
+│  CLI Executable │          │ Web Executable  │              │     Shared Core       │
+│ yt-transcriptor  │          │ yt-transcriptor  │              │     Modules          │
+│    -cli.exe     │          │   -web.exe      │              │                      │
+│                │          │                │              ┌────────┴────────┐     │
+│                │          │                │              │                 │     │
+└───────┬────────┘          └───────┬────────┘              │   Core Logic    │     │
+        │                        │                      │                 │     │
+        │                        │                      │                 │     │
+        ▼                        ▼                ┌─────▼─────┐   ┌─────▼──────┐ │
+┌─────────────────┐    ┌─────────────────┐   │ Transcript│   │ File      │ │
+│  CLI Interface  │    │  Web Interface  │   │ Processor │   │ Handler   │ │
+│  (cli_main.py)  │    │ (web_main.py)   │   │           │   │           │ │
+│                 │    │                 │   │           │   │           │ │
+│ • Argument      │    │ • FastAPI App   │   │ • YouTube │   │ • File    │ │
+│ • Processing    │    │ • Auto Browser  │   │   API     │   │   Ops     │ │
+│ • Console       │    │ • Permanent     │   │ • Validation│ │ • Formats │ │
+│ • Output        │    │   Downloads     │   │           │   │           │ │
+└─────────────────┘    └─────────────────┘   └───────────┘   └───────────┘ │
+        │                        │                      │                 │
+        └────────────────────────┼──────────────────────┼─────────────────┘
+                                 │                      │
+                                 ▼                      ▼
+                    ┌─────────────────────┐   ┌─────────────────────┐
+                    │  Shared Utilities   │   │   Web Resources     │
+                    │    (utils.py)        │   │                    │
+                    │  - URL Validation    │   │ • Templates/        │
+                    │  - Text Processing   │   │ • Static Files/     │
+                    │  - Common Functions  │   │ • Auto-launch/      │
+                    └─────────────────────┘   └─────────────────────┘
 ```
 
-### Dual-Interface Architecture
+### Dual-Executable Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
@@ -87,18 +87,94 @@ YouTube Transcriptor is a versatile Python application that provides both CLI an
                                       │
                                       ▼
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                     Interface Layer (Separated)                             │
+│                   Executable Interface Layer (Separated)                    │
 ├─────────────────────────────────┬───────────────────────────────────────────┤
-│        CLI Interface            │          Web Interface                   │
-│        (main.py)                │          (web_app.py)                    │
+│        CLI Executable           │          Web Executable                  │
+│      (yt-transcriptor-cli)      │      (yt-transcriptor-web)              │
 │                                 │                                           │
-│ • Argument Parsing             │ • FastAPI Application                    │
-│ • User Interaction             │ • HTTP Request Handling                  │
-│ • Command Line Output          │ • HTML Template Rendering                │
-│ • Error Display                │ • File Download Management               │
-│ • Workflow Orchestration       │ • Form Processing                        │
+│ • Console Application           │ • Windows Native Application           │
+│ • Argument Parsing (argparse)   │ • Browser Auto-launch                   │
+│ • Command Line Output          │ • Permanent Download Directory         │
+│ • User-specified Output        │ • FastAPI Web Framework                 │
+│ • Exit Code Support            │ • HTML Template Rendering               │
+│ • Error Display to stderr      │ • File Download Management              │
+│ • Workflow Orchestration       │ • Form Processing                       │
+│ • Cross-platform CLI           │ • Windows-specific optimizations        │
 └─────────────────────────────────┴───────────────────────────────────────────┘
 ```
+
+### Executable Architecture Comparison
+
+| Aspect | CLI Executable | Web Executable |
+|--------|----------------|----------------|
+| **Entry Point** | `src/cli_main.py:main()` | `src/web_main.py:main()` |
+| **Target Users** | Developers, Power Users | End Users, Non-technical |
+| **Interface Type** | Console Application | Windows GUI Application |
+| **Distribution** | Self-contained EXE | Self-contained EXE |
+| **Dependencies** | Core modules only | Core + Web Framework |
+| **Output Location** | User-specified | `~/yt-transcriptions/` |
+| **File Size** | ~15-20 MB | ~25-30 MB |
+| **PyInstaller Type** | `--console` | `--windowed` |
+| **Browser Integration** | None | Auto-launch to localhost:8000 |
+| **Error Handling** | Console output + Exit codes | HTML error pages |
+| **Configuration** | Command-line arguments | Web form interface |
+| **Use Cases** | Automation, Scripting, CI/CD | User-friendly access, Quick extraction |
+
+### Executable Entry Points
+
+#### CLI Executable (`yt-transcriptor-cli.exe`)
+
+**File**: `src/cli_main.py`
+
+```python
+def main(args=None):
+    """Main CLI function for yt-transcriptor-cli."""
+    parsed_args = parse_arguments(args)
+
+    # Validate URL
+    if not validate_youtube_url(parsed_args.url):
+        print(f"Error: Invalid YouTube URL: {parsed_args.url}", file=sys.stderr)
+        sys.exit(1)
+
+    # Extract, format, save transcript
+    # ...
+
+    print(f"Transcript saved to: {filepath}")
+    sys.exit(0)  # Success
+```
+
+**Key Features**:
+- Argument parsing with `argparse`
+- Exit code support for automation
+- Error output to stderr
+- User-specified output directories
+
+#### Web Executable (`yt-transcriptor-web.exe`)
+
+**File**: `src/web_main.py`
+
+```python
+def main():
+    """Main entry point for yt-transcriptor-web."""
+    # Ensure download directory exists
+    success, download_info = ensure_download_directory()
+
+    # Create modified FastAPI app
+    app_instance = create_modified_app()
+
+    # Open browser automatically
+    browser_thread = threading.Thread(target=open_browser, daemon=True)
+    browser_thread.start()
+
+    # Run server
+    uvicorn.run(app_instance, host="127.0.0.1", port=8000)
+```
+
+**Key Features**:
+- Automatic browser launch
+- Permanent download directory (`~/yt-transcriptions/`)
+- Windows-specific optimizations
+- Embedded web resources (templates, static files)
 
 ### Module Dependencies
 

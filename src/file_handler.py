@@ -1,6 +1,12 @@
 # src/file_handler.py
 from pathlib import Path
-from .utils import sanitize_filename
+
+try:
+    # Try relative imports first (when run as module)
+    from .utils import sanitize_filename
+except ImportError:
+    # Fall back to absolute imports (when run as script)
+    from utils import sanitize_filename
 
 def save_transcript(content: str, title: str, format_type: str, output_dir: str = "transcriptions") -> Path:
     """Save transcript content to file."""

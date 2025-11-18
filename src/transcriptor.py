@@ -1,6 +1,12 @@
 # src/transcriptor.py
 from youtube_transcript_api import YouTubeTranscriptApi
-from .utils import validate_youtube_url
+
+try:
+    # Try relative imports first (when run as module)
+    from .utils import validate_youtube_url
+except ImportError:
+    # Fall back to absolute imports (when run as script)
+    from utils import validate_youtube_url
 
 class NoTranscriptAvailableError(Exception):
     """Raised when no transcript is available for a video."""

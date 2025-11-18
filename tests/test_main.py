@@ -6,7 +6,7 @@ from io import StringIO
 
 def test_cli_argument_parsing():
     # Test that we can import and use the CLI
-    from src.main import parse_arguments
+    from src.cli_main import parse_arguments
 
     # Test with URL only
     args = parse_arguments(["https://youtu.be/test123"])
@@ -16,7 +16,7 @@ def test_cli_argument_parsing():
     assert args.language is None
 
 def test_cli_argument_parsing_with_options():
-    from src.main import parse_arguments
+    from src.cli_main import parse_arguments
 
     # Test with all options
     args = parse_arguments([
@@ -32,7 +32,7 @@ def test_cli_argument_parsing_with_options():
     assert args.output == "./transcripts"
 
 def test_main_function_success():
-    from src.main import main
+    from src.cli_main import main
 
     # Mock transcript objects as returned by YouTubeTranscriptApi.fetch()
     mock_snippet1 = Mock()
@@ -47,9 +47,9 @@ def test_main_function_success():
 
     mock_transcript = [mock_snippet1, mock_snippet2]
 
-    with patch('src.main.get_transcript') as mock_get:
-        with patch('src.main.get_video_title') as mock_title:
-            with patch('src.main.save_transcript') as mock_save:
+    with patch('src.cli_main.get_transcript') as mock_get:
+        with patch('src.cli_main.get_video_title') as mock_title:
+            with patch('src.cli_main.save_transcript') as mock_save:
                 mock_get.return_value = mock_transcript
                 mock_title.return_value = "Test Video"
                 mock_save.return_value = "/tmp/test_transcript.txt"
@@ -72,7 +72,7 @@ def test_main_function_success():
 
 def test_main_function_invalid_url():
     """Test main function with invalid URL."""
-    from src.main import main
+    from src.cli_main import main
 
     # Capture stderr
     captured_error = StringIO()
@@ -88,11 +88,16 @@ def test_main_function_invalid_url():
 
 def test_main_function_no_transcript_available():
     """Test main function when no transcript is available."""
-    from src.main import main
-    from src.transcriptor import NoTranscriptAvailableError
+    from src.cli_main import main
+    import sys
+    from pathlib import Path
+
+    # Import the exception from the same path as the CLI module
+    sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
+    from transcriptor import NoTranscriptAvailableError
 
     # Mock get_transcript to raise NoTranscriptAvailableError
-    with patch('src.main.get_transcript') as mock_get:
+    with patch('src.cli_main.get_transcript') as mock_get:
         mock_get.side_effect = NoTranscriptAvailableError("No transcript found")
 
         # Capture stderr
@@ -108,11 +113,16 @@ def test_main_function_no_transcript_available():
 
 def test_main_function_invalid_video_url():
     """Test main function when video URL is invalid."""
-    from src.main import main
-    from src.transcriptor import InvalidVideoURLError
+    from src.cli_main import main
+    import sys
+    from pathlib import Path
+
+    # Import the exception from the same path as the CLI module
+    sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
+    from transcriptor import InvalidVideoURLError
 
     # Mock get_transcript to raise InvalidVideoURLError
-    with patch('src.main.get_transcript') as mock_get:
+    with patch('src.cli_main.get_transcript') as mock_get:
         mock_get.side_effect = InvalidVideoURLError("Invalid video URL")
 
         # Capture stderr
@@ -128,10 +138,10 @@ def test_main_function_invalid_video_url():
 
 def test_main_function_unexpected_error():
     """Test main function with unexpected error."""
-    from src.main import main
+    from src.cli_main import main
 
     # Mock get_transcript to raise unexpected error
-    with patch('src.main.get_transcript') as mock_get:
+    with patch('src.cli_main.get_transcript') as mock_get:
         mock_get.side_effect = ValueError("Database connection failed")
 
         # Capture stderr

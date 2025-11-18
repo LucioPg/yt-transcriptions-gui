@@ -69,9 +69,56 @@ clean: ## Clean up build artifacts and cache files
 	@rm -rf *.egg-info/
 	@rm -rf .pytest_cache/
 	@rm -rf htmlcov/
+	@rm -rf spec/
 	@find . -type d -name __pycache__ -exec rm -rf {} +
 	@find . -type f -name "*.pyc" -delete
 	@echo "Clean complete"
+
+# Windows Packaging
+install-packaging-deps: ## Install packaging dependencies
+	@echo "Installing packaging dependencies..."
+	uv sync --extra packaging
+
+build-web-exe: clean install-packaging-deps ## Create Windows executable for web interface
+	@echo "Creating Windows executable for web interface..."
+	@echo "Note: This requires PyInstaller and packaging dependencies"
+	@if command -v uv >/dev/null 2>&1; then \
+		uv run pyinstaller --onefile --windowed \
+		--add-data "src/templates;templates" \
+		--add-data "src/static;static" \
+		--name "yt-transcriptor-web" \
+		--icon=NONE \
+		src/web_main.py; \
+		echo "✓ Windows executable created in dist/yt-transcriptor-web.exe"; \
+	else \
+		echo "uv not found. Please install uv first: https://github.com/astral-sh/uv"; \
+		exit 1; \
+	fi
+
+build-cli-exe: clean install-packaging-deps ## Create Windows executable for CLI
+	@echo "Creating Windows executable for CLI..."
+	@echo "Note: This requires PyInstaller and packaging dependencies"
+	@if command -v uv >/dev/null 2>&1; then \
+		uv run pyinstaller --onefile \
+		--name "yt-transcriptor-cli" \
+		--console \
+		src/cli_main.py; \
+		echo "✓ Windows CLI executable created in dist/yt-transcriptor-cli.exe"; \
+	else \
+		echo "uv not found. Please install uv first: https://github.com/astral-sh/uv"; \
+		exit 1; \
+	fi
+
+build-all-exe: build-cli-exe build-web-exe ## Build both Windows executables
+
+test-exe: ## Test Windows executables (if they exist)
+	@if [ -f "dist/yt-transcriptor-cli.exe" ]; then \
+		echo "Testing CLI executable..."; \
+		dist/yt-transcriptor-cli.exe --help; \
+	else \
+		echo "CLI executable not found. Run 'make build-cli-exe' first."; \
+	fi
+	@echo "Web executable test requires manual run (starts browser)"
 
 build: clean ## Build the package
 	@echo "Building package..."
@@ -91,13 +138,21 @@ docs: ## Generate documentation
 	@echo "- Contributing Guidelines: docs/CONTRIBUTING.md"
 
 # Running the Application
-run: ## Run the application with help
-	@echo "Running YouTube Transcriptor..."
-	uv run python -m src.main --help
+run: ## Run the CLI application with help
+	@echo "Running YouTube Transcriptor CLI..."
+	uv run python -m src.cli_main --help
 
-run-example: ## Run with example URL
+run-cli: ## Run CLI interface
+	@echo "Running YouTube Transcriptor CLI..."
+	uv run python -m src.cli_main --help
+
+run-web: ## Run web interface
+	@echo "Starting YouTube Transcriptor Web Interface..."
+	uv run python -m src.web_main
+
+run-example: ## Run CLI with example URL
 	@echo "Running example with test URL..."
-	uv run python -m src.main "https://www.youtube.com/watch?v=dQw4w9WgXcQ" --output ./example_output
+	uv run python -m src.cli_main "https://www.youtube.com/watch?v=dQw4w9WgXcQ" --output ./example_output
 
 # Quality Checks
 check-all: format-check lint test ## Run all quality checks (format, lint, test)
