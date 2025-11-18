@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}YouTube Transcriptor - Inizio{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h2>📝 Estrai Trascrizione</h2>
+    <p>Inserisci l'URL di un video YouTube per estrarne la trascrizione.</p>
+
+    <form method="post" action="/extract">
+        <div class="form-group">
+            <label for="url">URL del Video YouTube *</label>
+            <input
+                type="url"
+                id="url"
+                name="url"
+                placeholder="https://www.youtube.com/watch?v=VIDEO_ID o https://youtu.be/VIDEO_ID"
+                required
+                size="50">
+        </div>
+
+        <div class="form-group">
+            <label for="format_type">Formato Output</label>
+            <select id="format_type" name="format_type">
+                <option value="txt" selected>Testo Semplice (.txt)</option>
+                <option value="srt">Sottotitoli SRT (.srt)</option>
+                <option value="vtt">WebVTT (.vtt)</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="language">Codice Lingua (opzionale)</label>
+            <input
+                type="text"
+                id="language"
+                name="language"
+                placeholder="es: it, en, es, fr (lascia vuoto per auto-detect)"
+                size="20">
+            <small>Se non specificato, verrà utilizzata la prima lingua disponibile</small>
+        </div>
+
+        <button type="submit" style="width: 100%;">
+            🚀 Estrai Trascrizione
+        </button>
+    </form>
+</div>
+
+<div class="form-container">
+    <h3>ℹ️ Come Funziona</h3>
+    <ol>
+        <li><strong>Inserisci URL</strong>: Copia e incolla l'URL del video YouTube</li>
+        <li><strong>Scegli Formato</strong>: Seleziona tra testo semplice, SRT o VTT</li>
+        <li><strong>Lingua Opzionale</strong>: Specifica un codice lingua se desideri una trascrizione in una lingua particolare</li>
+        <li><strong>Estrai</strong>: Il sistema estrarrà la trascrizione direttamente senza scaricare il video</li>
+        <li><strong>Visualizza e Scarica</strong>: Visualizza il risultato e scarica il file</li>
+    </ol>
+</div>
+
+<div class="form-container">
+    <h3>🎯 Esempi di URL</h3>
+    <ul>
+        <li><code>https://www.youtube.com/watch?v=dQw4w9WgXcQ</code></li>
+        <li><code>https://youtu.be/dQw4w9WgXcQ</code></li>
+        <li><code>https://www.youtube.com/embed/dQw4w9WgXcQ</code></li>
+    </ul>
+</div>
+
+<div class="form-container">
+    <h3>📋 Formati Disponibili</h3>
+    <ul>
+        <li><strong>TXT (.txt)</strong>: Testo semplice, una riga per ogni frase</li>
+        <li><strong>SRT (.srt)</strong>: Sottotitoli con timestamp, compatibile con lettori video</li>
+        <li><strong>VTT (.vtt)</strong>: WebVTT, formato web per sottotitoli</li>
+    </ul>
+</div>
+{% endblock %}

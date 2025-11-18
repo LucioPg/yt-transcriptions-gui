@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}YouTube Transcriptor{% endblock %}</title>
+
+    <!-- Pico.css for minimal, clean design -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+
+    <!-- Custom styles for better layout -->
+    <style>
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .form-container {
+            background: var(--card-background-color, #fff);
+            border-radius: var(--border-radius, 0.25rem);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .result-container {
+            background: var(--card-background-color, #fff);
+            border-radius: var(--border-radius, 0.25rem);
+            padding: 1.5rem;
+        }
+
+        .transcript-content {
+            background: var(--code-background-color, #f8f9fa);
+            border-radius: var(--border-radius, 0.25rem);
+            padding: 1rem;
+            font-family: var(--font-family, monospace);
+            white-space: pre-wrap;
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid var(--muted-border-color, #e1e5e9);
+        }
+
+        .error-message {
+            background: var(--del-background-color, #fff5f5);
+            border: 1px solid var(--del-border-color, #feb2b2);
+            border-radius: var(--border-radius, 0.25rem);
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+
+        .success-message {
+            background: var(--ins-background-color, #f0fff4);
+            border: 1px solid var(--ins-border-color, #9ae6b4);
+            border-radius: var(--border-radius, 0.25rem);
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+
+        .download-section {
+            margin-top: 1rem;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .video-info {
+            background: var(--card-background-color, #fff);
+            border: 1px solid var(--muted-border-color, #e1e5e9);
+            border-radius: var(--border-radius, 0.25rem);
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 0.5rem;
+            background: var(--background-color, #fafbfc);
+            border-radius: var(--border-radius, 0.25rem);
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .download-section {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="container">
+        <header class="header">
+            <hgroup>
+                <h1>🎬 YouTube Transcriptor</h1>
+                <p>Estrai trascrizioni da video YouTube senza scaricare i file</p>
+            </hgroup>
+        </header>
+
+        {% block content %}{% endblock %}
+
+        <footer>
+            <hr>
+            <p style="text-align: center; color: var(--muted-color);">
+                <small>YouTube Transcriptor - Tool locale per estrazione trascrizioni</small><br>
+                <small><a href="/" style="color: var(--primary);">← Nuova estrazione</a></small>
+            </p>
+        </footer>
+    </main>
+</body>
+</html>

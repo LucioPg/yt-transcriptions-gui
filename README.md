@@ -4,14 +4,16 @@
 [![Test Coverage](https://img.shields.io/badge/coverage-88%25-green.svg)](htmlcov/index.html)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-A lightweight, professional Python CLI tool that extracts YouTube video transcripts directly without downloading videos. Built with modern Python practices and comprehensive testing.
+A lightweight, professional Python tool that extracts YouTube video transcripts directly without downloading videos. Features both CLI and web interfaces, built with modern Python practices and comprehensive testing.
 
 ## ✨ Features
 
 - 🎯 **Direct Transcript Extraction**: Download transcripts without video downloads
+- 🌐 **Dual Interface**: Both CLI and web interface for different use cases
 - 📝 **Multiple Output Formats**: Support for TXT, SRT, and VTT formats
 - 🌍 **Language Selection**: Manual language override or auto-detection
 - 📁 **Smart File Management**: Automatic filename generation and conflict resolution
+- 🎨 **Clean Web Design**: Minimal, responsive interface using Pico.css
 - ⚡ **High Performance**: Fast extraction with minimal resource usage
 - 🔧 **Developer Friendly**: Extensive test coverage and clean architecture
 - 🛡️ **Robust Error Handling**: Comprehensive error handling with user-friendly messages
@@ -39,14 +41,34 @@ uv run python -m pytest tests/
 
 ## 📖 Usage
 
-### Basic Usage
+### Web Interface (Recommended)
+
+Start the web interface for a user-friendly experience:
+
+```bash
+# Start the web server
+uv run python -m src.web_app
+
+# Then open your browser to http://localhost:8000
+```
+
+The web interface provides:
+- 🎨 Clean, responsive design
+- 📝 Real-time transcript preview
+- 💾 Direct download in multiple formats
+- 🌍 Language selection
+- ❌ User-friendly error messages
+
+### CLI Usage
+
+#### Basic Usage
 
 ```bash
 # Extract transcript in default format (TXT)
 uv run python -m src.main "https://www.youtube.com/watch?v=VIDEO_ID"
 ```
 
-### Advanced Usage
+#### Advanced Usage
 
 ```bash
 # Extract with custom options

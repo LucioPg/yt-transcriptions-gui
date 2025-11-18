@@ -4,6 +4,10 @@ version = "0.1.0"
 description = "Extract YouTube video transcripts directly without downloading videos"
 requires-python = ">=3.13"
 dependencies = [
+    "fastapi>=0.121.2",
+    "jinja2>=3.1.6",
+    "python-multipart>=0.0.20",
+    "uvicorn>=0.38.0",
     "youtube-transcript-api>=1.2.3",
 ]
 
@@ -14,6 +18,8 @@ yt-transcriptor = "src.main:main"
 dev = [
     "coverage>=7.12.0",
     "pytest>=9.0.1",
+    "httpx>=0.28.1",
+    "pytest-mock>=3.15.1",
 ]
 
 [tool.hatch.build.targets.wheel]

@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block title %}
+{% if success %}Trascrizione: {{ video_title }}{% else %}Errore{% endif %}
+{% endblock %}
+
+{% block content %}
+{% if success %}
+<!-- Success Message -->
+<div class="success-message">
+    <strong>✅ Trascrizione estratta con successo!</strong>
+</div>
+
+<!-- Video Info -->
+<div class="video-info">
+    <h3>📹 Informazioni Video</h3>
+    <p><strong>Titolo:</strong> {{ video_title }}</p>
+    <p><strong>URL:</strong> <a href="{{ video_url }}" target="_blank">{{ video_url }}</a></p>
+
+    <div class="stats">
+        <div class="stat-item">
+            <strong>{{ lines_count }}</strong><br>
+            <small>righe</small>
+        </div>
+        <div class="stat-item">
+            <strong>{{ format_type.upper() }}</strong><br>
+            <small>formato</small>
+        </div>
+        {% if language %}
+        <div class="stat-item">
+            <strong>{{ language.upper() }}</strong><br>
+            <small>lingua</small>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Transcript Content -->
+<div class="result-container">
+    <h3>📄 Trascrizione</h3>
+    <div class="transcript-content">{{ transcript_content }}</div>
+
+    <!-- Download Section -->
+    <div class="download-section">
+        <a href="/download/{{ download_filename }}" role="button" class="primary">
+            💾 Scarica {{ format_type.upper() }}
+        </a>
+        <a href="/" role="button" class="secondary">
+            ← Nuova Estrazione
+        </a>
+    </div>
+</div>
+
+{% else %}
+<!-- Error Message -->
+<div class="error-message">
+    <h3>❌ Si è verificato un errore</h3>
+
+    {% if error_type == "invalid_url" %}
+    <p><strong>URL non valido</strong></p>
+    <p>{{ error }}</p>
+    <p>Per favore, verifica di aver inserito un URL YouTube corretto.</p>
+
+    {% elif error_type == "no_transcript" %}
+    <p><strong>Trascrizione non disponibile</strong></p>
+    <p>{{ error }}</p>
+    <p>Questo video potrebbe non avere trascrizioni disponibili. Prova con un altro video o controlla se il video ha trascrizioni abilitate su YouTube.</p>
+
+    {% else %}
+    <p><strong>Errore imprevisto</strong></p>
+    <p>{{ error }}</p>
+    <p>Si è verificato un errore inaspettato. Per favore, riprova più tardi.</p>
+    {% endif %}
+
+    <div style="margin-top: 1rem;">
+        <a href="/" role="button" class="primary">
+            ← Riprova
+        </a>
+    </div>
+</div>
+{% endif %}
+
+<!-- Additional Help Section -->
+<div class="form-container" style="margin-top: 2rem;">
+    <h3>💡 Suggerimenti</h3>
+    <ul>
+        <li>Assicurati che il video abbia le trascrizioni abilitate su YouTube</li>
+        <li>Alcuni video potrebbero avere trascrizioni solo in certe lingue</li>
+        <li>Se specifichi una lingua, assicurati che il video abbia trascrizioni in quella lingua</li>
+        <li>I video privati o rimossi non potranno essere elaborati</li>
+    </ul>
+
+    <h4>Links Utili</h4>
+    <ul>
+        <li><a href="/" target="_self">← Torna alla home</a></li>
+        <li><a href="https://support.google.com/youtube/answer/2734796" target="_blank">Come aggiungere trascrizioni ai video YouTube</a></li>
+    </ul>
+</div>
+{% endblock %}
