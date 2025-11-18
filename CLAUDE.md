@@ -25,9 +25,26 @@
    - Nome del file basato sul titolo del video YouTube
    - Gestire caratteri speciali nei titoli per nomi file validi
 
+## Development protocol
+When creating, modifying some code that makes use of some external packages, please be sure to check the current documentation
+by using the "context7" mcp.
+
 ## Technical Considerations
 
 - Libraries suggerite: `yt-dlp` o `youtube-transcript-api` per estrarre trascrizioni
 - Gestione errori per video senza trascrizioni disponibili
 - Supporto per lingue diverse (se disponibile)
 - Formato output: testo semplice o formati strutturati (SRT, VTT)
+
+## TEST methodology
+When a test file is created with mocking please ensure that the mocked methods, functions, classes or even modules are
+real by using "create_spec". Example:
+```python
+from unittest.mock import create_autospec
+import mio_modulo
+
+ClasseReale = mio_modulo.MiaClasse
+mock_classe = create_autospec(ClasseReale)
+mock_classe.metodo(42)  # OK se 'metodo' esiste
+mock_classe.inventato()  # Errore se 'inventato' non esiste
+```
