@@ -4,3 +4,8 @@ uv.lock
 */*.log
 /.coverage
 htmlcov
+*.info
+transcriptions
+*.txt
+*.srt
+*.vtt
