@@ -12,7 +12,7 @@ def test_cli_argument_parsing():
     args = parse_arguments(["https://youtu.be/test123"])
     assert args.url == "https://youtu.be/test123"
     assert args.format == "txt"
-    assert args.output == "."
+    assert args.output == "transcriptions"
     assert args.language is None
 
 def test_cli_argument_parsing_with_options():

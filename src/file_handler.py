@@ -2,7 +2,7 @@
 from pathlib import Path
 from .utils import sanitize_filename
 
-def save_transcript(content: str, title: str, format_type: str, output_dir: str = ".") -> Path:
+def save_transcript(content: str, title: str, format_type: str, output_dir: str = "transcriptions") -> Path:
     """Save transcript content to file."""
     output_path = Path(output_dir)
     output_path.mkdir(exist_ok=True)

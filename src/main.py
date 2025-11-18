@@ -39,8 +39,8 @@ Examples:
 
     parser.add_argument(
         "--output", "-o",
-        default=".",
-        help="Output directory (default: current directory)"
+        default="transcriptions",
+        help="Output directory (default: transcriptions)"
     )
 
     return parser.parse_args(args)
