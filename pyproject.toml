@@ -1,11 +1,14 @@
 [project]
 name = "yt-transcriptor"
 version = "0.1.0"
-description = "Add your description here"
+description = "Extract YouTube video transcripts directly without downloading videos"
 requires-python = ">=3.13"
 dependencies = [
     "youtube-transcript-api>=1.2.3",
 ]
+
+[project.scripts]
+yt-transcriptor = "src.main:main"
 
 [dependency-groups]
 dev = [
