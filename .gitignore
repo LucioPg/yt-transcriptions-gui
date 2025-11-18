@@ -3,3 +3,4 @@ uv.lock
 .idea
 */*.log
 /.coverage
+htmlcov
