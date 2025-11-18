@@ -1,6 +1,6 @@
 # API Documentation
 
-This document provides detailed API documentation for the YouTube Transcriptor library.
+This document provides detailed API documentation for the YouTube Transcriptor library, covering both core modules and the FastAPI web interface.
 
 ## Table of Contents
 
@@ -9,8 +9,11 @@ This document provides detailed API documentation for the YouTube Transcriptor l
   - [file_handler](#file_handler)
   - [utils](#utils)
   - [main](#main)
+  - [web_app](#web_app)
+- [Web API Endpoints](#web-api-endpoints)
 - [Exceptions](#exceptions)
 - [Data Structures](#data-structures)
+- [Integration Examples](#integration-examples)
 
 ## Core Modules
 
@@ -280,6 +283,525 @@ Main CLI function that orchestrates the transcript extraction process.
 5. Format transcript
 6. Save to file
 7. Display summary
+
+### web_app
+
+FastAPI web application module providing browser-based transcript extraction interface.
+
+#### Application Setup
+
+##### `app = FastAPI(...)`
+
+FastAPI application instance with configuration:
+
+**Parameters:**
+- `title`: "YouTube Transcriptor"
+- `description`: "Extract YouTube video transcripts directly without downloading videos"
+- `version`: "1.0.0"
+- `lifespan`: Application lifespan manager for cleanup
+
+**Features:**
+- Automatic API documentation at `/docs`
+- Template rendering with Jinja2
+- Static file serving
+- Temporary file management
+
+#### Web Endpoints
+
+The web application provides the following HTTP endpoints:
+
+##### `GET /` → HTMLResponse
+
+Render the homepage with transcript extraction form.
+
+**Returns:**
+- HTML page with form interface
+- Template: `index.html`
+- Context: Basic navigation and form data
+
+**Example Request:**
+```bash
+curl http://localhost:8000/
+```
+
+##### `POST /extract` → HTMLResponse
+
+Process transcript extraction from form submission.
+
+**Parameters:**
+- `url` (form): YouTube video URL (required)
+- `format_type` (form): Output format (txt/srt/vtt, default: txt)
+- `language` (form): Language code (optional)
+
+**Returns:**
+- Success: HTML with transcript preview and download link
+- Error: HTML with error message and guidance
+
+**Example Request:**
+```bash
+curl -X POST http://localhost:8000/extract \
+  -F "url=https://www.youtube.com/watch?v=dQw4w9WgXcQ" \
+  -F "format_type=srt" \
+  -F "language=en"
+```
+
+##### `GET /download/{filename}` → FileResponse
+
+Download transcript file.
+
+**Parameters:**
+- `filename` (path): Name of file to download
+
+**Returns:**
+- File download with appropriate MIME type
+- Security: Validates file is in temporary directory
+
+**Example Request:**
+```bash
+curl -O http://localhost:8000/download/video_title_srt.txt
+```
+
+##### `GET /health` → JSON
+
+Health check endpoint for monitoring.
+
+**Returns:**
+```json
+{
+  "status": "healthy",
+  "service": "YouTube Transcriptor"
+}
+```
+
+#### Template Integration
+
+##### `templates = Jinja2Templates("src/templates")`
+
+Jinja2 template engine setup for HTML rendering.
+
+**Available Templates:**
+- `base.html`: Base layout with styling and navigation
+- `index.html`: Homepage with extraction form
+- `result.html`: Results display with success/error states
+
+#### Static Files
+
+##### `app.mount("/static", StaticFiles("src/static"))`
+
+Static file serving for CSS, JavaScript, and images.
+
+**Usage in Templates:**
+```html
+<link rel="stylesheet" href="/static/css/custom.css">
+```
+
+#### Error Handling
+
+The web application provides comprehensive error handling:
+
+**Error Types:**
+- `InvalidVideoURLError`: Invalid YouTube URL format
+- `NoTranscriptAvailableError`: No transcript available for video
+- `Exception`: Unexpected system errors
+
+**Error Response Context:**
+```python
+{
+    "request": request,
+    "success": False,
+    "error": "Error description",
+    "error_type": "invalid_url" | "no_transcript" | "unexpected"
+}
+```
+
+#### File Management
+
+##### `TEMP_DIR = Path(tempfile.mkdtemp(prefix="yt_transcriptor_"))`
+
+Temporary directory for file downloads with automatic cleanup.
+
+**Features:**
+- Secure temporary file handling
+- Automatic cleanup on application shutdown
+- Conflict resolution for duplicate files
+
+## Web API Endpoints
+
+The YouTube Transcriptor web interface provides a RESTful API built on FastAPI. All endpoints return HTML responses for browser compatibility.
+
+### Base URL
+```
+http://localhost:8000
+```
+
+### Available Endpoints
+
+#### GET /
+
+Renders the homepage with the transcript extraction form.
+
+**Response:** HTML page with form interface
+
+**Example:**
+```bash
+# Get homepage
+curl http://localhost:8000/
+
+# Open in browser
+open http://localhost:8000
+```
+
+#### POST /
+
+Process transcript extraction request (alias for `/extract`).
+
+**Content-Type:** `application/x-www-form-urlencoded`
+
+**Parameters:**
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `url` | string | Yes | YouTube video URL |
+| `format_type` | string | No | Output format (txt, srt, vtt) |
+| `language` | string | No | Language code (e.g., en, it, es) |
+
+**Example Request:**
+```bash
+curl -X POST http://localhost:8000/ \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "url=https://www.youtube.com/watch?v=dQw4w9WgXcQ" \
+  -d "format_type=srt" \
+  -d "language=en"
+```
+
+#### POST /extract
+
+Process transcript extraction request (primary endpoint).
+
+**Content-Type:** `application/x-www-form-urlencoded`
+
+**Parameters:**
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| `url` | string | Yes | - | YouTube video URL |
+| `format_type` | string | No | txt | Output format (txt/srt/vtt) |
+| `language` | string | No | auto | Language code preference |
+
+**Success Response (200 OK):**
+```html
+<!-- HTML with transcript preview and download options -->
+<div class="success-message">
+    <strong>✅ Trascrizione estratta con successo!</strong>
+</div>
+<div class="video-info">
+    <h3>📹 Informazioni Video</h3>
+    <p><strong>Titolo:</strong> Video Title</p>
+    <p><strong>URL:</strong> <a href="...">https://...</a></p>
+</div>
+<div class="transcript-content">...</div>
+<a href="/download/filename.srt" role="button" class="primary">
+    💾 Scarica SRT
+</a>
+```
+
+**Error Response (200 OK):**
+```html
+<!-- HTML with error message and guidance -->
+<div class="error-message">
+    <h3>❌ Si è verificato un errore</h3>
+    <p><strong>URL non valido</strong></p>
+    <p>The provided URL is not a valid YouTube URL.</p>
+</div>
+```
+
+**Example Request:**
+```bash
+# Basic extraction
+curl -X POST http://localhost:8000/extract \
+  -d "url=https://youtu.be/dQw4w9WgXcQ"
+
+# With format and language
+curl -X POST http://localhost:8000/extract \
+  -d "url=https://www.youtube.com/watch?v=dQw4w9WgXcQ" \
+  -d "format_type=vtt" \
+  -d "language=it"
+```
+
+#### GET /download/{filename}
+
+Download transcript file generated from extraction.
+
+**Parameters:**
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `filename` | string | Name of file to download |
+
+**Response:** File download with appropriate MIME type
+
+**Headers:**
+```
+Content-Type: text/plain
+Content-Disposition: attachment; filename="video_title.txt"
+```
+
+**Example Request:**
+```bash
+# Download file
+curl -O http://localhost:8000/download/video_title_srt.txt
+
+# Download with custom filename
+curl -o my_transcript.srt http://localhost:8000/download/video_title_srt.txt
+```
+
+**Security Note:** Files are validated to ensure they exist in the temporary directory to prevent path traversal attacks.
+
+#### GET /health
+
+Health check endpoint for monitoring and load balancers.
+
+**Response:** JSON status information
+
+**Example Response:**
+```json
+{
+  "status": "healthy",
+  "service": "YouTube Transcriptor"
+}
+```
+
+**Example Request:**
+```bash
+curl http://localhost:8000/health
+
+# Response
+{"status":"healthy","service":"YouTube Transcriptor"}
+```
+
+### URL Formats Supported
+
+All endpoints accept the following YouTube URL formats:
+
+```
+https://www.youtube.com/watch?v=VIDEO_ID
+https://youtu.be/VIDEO_ID
+https://www.youtube.com/embed/VIDEO_ID
+https://m.youtube.com/watch?v=VIDEO_ID
+```
+
+### Response Formats
+
+#### HTML Responses
+
+Most endpoints return HTML responses for browser compatibility:
+
+```html
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>YouTube Transcriptor</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+</head>
+<body>
+    <!-- Content -->
+</body>
+</html>
+```
+
+#### File Responses
+
+Download endpoints return raw files:
+
+```http
+HTTP/1.1 200 OK
+Content-Type: text/plain
+Content-Disposition: attachment; filename="video_title.txt"
+Content-Length: 1234
+
+[File content...]
+```
+
+#### JSON Responses
+
+Health check returns JSON:
+
+```json
+{
+  "status": "healthy",
+  "service": "YouTube Transcriptor"
+}
+```
+
+### Error Handling
+
+#### HTTP Status Codes
+
+| Status Code | Description | Usage |
+|-------------|-------------|-------|
+| 200 OK | Success | All successful responses |
+| 404 Not Found | File not found | Invalid download filename |
+| 422 Unprocessable Entity | Validation error | Invalid form data |
+
+#### Error Response Format
+
+Errors are returned as HTML with user-friendly messages:
+
+```html
+<div class="error-message">
+    <h3>❌ Si è verificato un errore</h3>
+
+    {% if error_type == "invalid_url" %}
+    <p><strong>URL non valido</strong></p>
+    <p>{{ error }}</p>
+
+    {% elif error_type == "no_transcript" %}
+    <p><strong>Trascrizione non disponibile</strong></p>
+    <p>{{ error }}</p>
+
+    {% else %}
+    <p><strong>Errore imprevisto</strong></p>
+    <p>{{ error }}</p>
+    {% endif %}
+</div>
+```
+
+#### Error Types
+
+| Error Type | Description | Causes |
+|------------|-------------|---------|
+| `invalid_url` | Invalid YouTube URL format | Malformed URL, unsupported format |
+| `no_transcript` | No transcript available | Video lacks captions, private video |
+| `unexpected` | System error | Network issues, API failures |
+
+### Integration Examples
+
+#### Python Integration
+
+```python
+import requests
+from pathlib import Path
+
+def extract_transcript_web_api(youtube_url, format_type="txt", language=None):
+    """Extract transcript using web API."""
+
+    # Prepare form data
+    data = {
+        "url": youtube_url,
+        "format_type": format_type,
+    }
+    if language:
+        data["language"] = language
+
+    # Submit extraction request
+    response = requests.post("http://localhost:8000/extract", data=data)
+    response.raise_for_status()
+
+    # Extract download link from HTML response (simplified)
+    if "download/" in response.text:
+        # Parse HTML to find download link
+        download_url = "http://localhost:8000/download/filename.txt"
+
+        # Download file
+        file_response = requests.get(download_url)
+        file_response.raise_for_status()
+
+        return file_response.text
+    else:
+        raise Exception("Extraction failed")
+
+# Usage
+transcript = extract_transcript_web_api(
+    "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    format_type="srt",
+    language="en"
+)
+print(transcript)
+```
+
+#### JavaScript Integration
+
+```javascript
+async function extractTranscript(url, format = 'txt', language = null) {
+    const formData = new FormData();
+    formData.append('url', url);
+    formData.append('format_type', format);
+    if (language) {
+        formData.append('language', language);
+    }
+
+    try {
+        const response = await fetch('/extract', {
+            method: 'POST',
+            body: formData
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const html = await response.text();
+
+        // Parse HTML to find download link (simplified)
+        const downloadMatch = html.match(/href="\/download\/([^"]+)"/);
+        if (downloadMatch) {
+            const filename = downloadMatch[1];
+            const downloadUrl = `/download/${filename}`;
+
+            // Trigger download
+            const a = document.createElement('a');
+            a.href = downloadUrl;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+    } catch (error) {
+        console.error('Error extracting transcript:', error);
+        throw error;
+    }
+}
+
+// Usage
+extractTranscript(
+    'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+    'srt',
+    'en'
+);
+```
+
+#### cURL Examples
+
+```bash
+#!/bin/bash
+
+# Extract transcript with cURL
+YOUTUBE_URL="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+FORMAT="srt"
+LANGUAGE="en"
+
+# Submit extraction request
+RESPONSE=$(curl -s -X POST "http://localhost:8000/extract" \
+    -d "url=$YOUTUBE_URL" \
+    -d "format_type=$FORMAT" \
+    -d "language=$LANGUAGE")
+
+# Check for success
+if [[ $RESPONSE == *"Trascrizione estratta con successo"* ]]; then
+    echo "Extraction successful!"
+
+    # Extract filename (simplified)
+    FILENAME=$(echo "$RESPONSE" | grep -o 'download/[^"]*' | cut -d'/' -f2)
+
+    if [ ! -z "$FILENAME" ]; then
+        echo "Downloading: $FILENAME"
+        curl -O "http://localhost:8000/download/$FILENAME"
+        echo "Download complete!"
+    fi
+else
+    echo "Extraction failed"
+    echo "$RESPONSE"
+fi
+```
 
 ## Exceptions
 

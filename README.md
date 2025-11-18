@@ -205,18 +205,26 @@ yt-transcriptor/
 │   ├── main.py             # CLI interface
 │   ├── transcriptor.py     # Core transcript extraction
 │   ├── file_handler.py     # File operations and formatting
-│   └── utils.py            # Utility functions
+│   ├── utils.py            # Utility functions
+│   ├── web_app.py          # FastAPI web interface
+│   ├── templates/          # HTML templates for web interface
+│   │   ├── base.html       # Base layout with styling
+│   │   ├── index.html      # Homepage with extraction form
+│   │   └── result.html     # Results display page
+│   └── static/             # Static files (CSS, JS, images)
 ├── tests/                  # Test suite
 │   ├── test_main.py        # CLI tests
 │   ├── test_transcriptor.py # Core logic tests
 │   ├── test_file_handler.py # File operations tests
 │   ├── test_utils.py       # Utility tests
+│   ├── test_web_app.py     # Web interface tests
 │   └── test_integration.py # End-to-end tests
 ├── docs/                   # Documentation
-│   ├── API.md              # API documentation
+│   ├── API.md              # API documentation (CLI + Web)
 │   ├── ARCHITECTURE.md     # System architecture
 │   ├── CONTRIBUTING.md     # Contribution guidelines
 │   ├── DEVELOPMENT.md      # Development guide
+│   ├── WEB_INTERFACE.md    # Web interface documentation
 │   └── CHANGELOG.md        # Version history
 ├── htmlcov/               # Coverage reports
 └── transcriptions/        # Default output directory
@@ -224,11 +232,20 @@ yt-transcriptor/
 
 ## 📚 Documentation
 
-- [API Documentation](docs/API.md) - Detailed API reference
-- [Architecture Guide](docs/ARCHITECTURE.md) - System design and architecture
-- [Development Guide](docs/DEVELOPMENT.md) - Development setup and guidelines
+### User Documentation
+- **[Web Interface Guide](docs/WEB_INTERFACE.md)** - Complete web interface documentation
+- [API Documentation](docs/API.md) - Detailed API reference including web endpoints
+- [Architecture Guide](docs/ARCHITECTURE.md) - System design and dual-interface architecture
+
+### Developer Documentation
+- [Development Guide](docs/DEVELOPMENT.md) - Development setup, patterns, and web development
 - [Contributing Guidelines](docs/CONTRIBUTING.md) - How to contribute to the project
 - [Changelog](docs/CHANGELOG.md) - Version history and changes
+
+### Quick Links
+- 🌐 **Web Interface**: `uv run python -m src.web_app` → http://localhost:8000
+- 🔧 **CLI Tool**: `uv run python -m src.main "https://youtu.be/VIDEO_ID"`
+- 📖 **API Docs**: http://localhost:8000/docs (when web server is running)
 
 ## 🔧 Dependencies
 

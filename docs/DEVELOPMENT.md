@@ -21,6 +21,7 @@ This comprehensive guide provides everything developers need to know to work wit
 - **uv**: Fast Python package manager (recommended)
 - **Git**: Version control system
 - **IDE/Editor**: VS Code, PyCharm, or similar (recommended)
+- **Modern Web Browser**: Chrome, Firefox, Safari, or Edge for web interface testing
 
 ### Initial Setup
 
@@ -45,6 +46,12 @@ This comprehensive guide provides everything developers need to know to work wit
    ```bash
    uv run python -m pytest tests/
    uv run python -m src.main --help
+   ```
+
+4. **Test web interface (optional)**
+   ```bash
+   uv run python -m src.web_app
+   # Open http://localhost:8000 in browser
    ```
 
 ### IDE Configuration
@@ -96,20 +103,32 @@ yt-transcriptor/
 │   ├── main.py             # CLI interface and orchestration
 │   ├── transcriptor.py     # Core transcript extraction logic
 │   ├── file_handler.py     # File operations and formatting
-│   └── utils.py            # Utility functions
+│   ├── utils.py            # Utility functions
+│   ├── web_app.py          # FastAPI web interface
+│   ├── templates/          # HTML templates for web interface
+│   │   ├── base.html       # Base layout template
+│   │   ├── index.html      # Homepage with extraction form
+│   │   └── result.html     # Results display template
+│   └── static/             # Static files (CSS, JS, images)
+│       ├── css/            # Custom stylesheets
+│       ├── js/             # JavaScript files
+│       └── images/         # Image assets
 ├── tests/                  # Test suite
 │   ├── __init__.py         # Test package initialization
 │   ├── test_main.py        # CLI interface tests
 │   ├── test_transcriptor.py # Core logic tests
 │   ├── test_file_handler.py # File operations tests
 │   ├── test_utils.py       # Utility function tests
+│   ├── test_web_app.py     # Web interface tests
 │   ├── test_integration.py # End-to-end tests
 │   └── test_project_setup.py # Environment setup tests
 ├── docs/                   # Documentation
 │   ├── API.md              # API documentation
 │   ├── ARCHITECTURE.md     # System architecture
 │   ├── CONTRIBUTING.md     # Contribution guidelines
-│   └── DEVELOPMENT.md      # Development guide
+│   ├── DEVELOPMENT.md      # Development guide
+│   ├── WEB_INTERFACE.md    # Web interface documentation
+│   └── CHANGELOG.md        # Version history
 ├── htmlcov/               # Coverage reports (generated)
 ├── transcriptions/        # Default output directory
 ├── .gitignore            # Git ignore rules
@@ -143,6 +162,26 @@ yt-transcriptor/
 - URL validation
 - Text processing and sanitization
 - Common utility functions
+
+#### src/web_app.py
+- FastAPI web application framework
+- HTTP request/response handling
+- HTML template rendering with Jinja2
+- Form processing and validation
+- File download management
+- Temporary file handling and cleanup
+
+#### src/templates/
+HTML templates for web interface with Italian language support:
+- **base.html**: Base layout with Pico.css styling and navigation
+- **index.html**: Homepage with extraction form and instructions
+- **result.html**: Results display with transcript preview and download options
+
+#### src/static/
+Static assets for web interface:
+- **css/**: Custom stylesheets extending Pico.css
+- **js/**: JavaScript files for enhanced functionality
+- **images/**: Image assets and icons
 
 ## Coding Standards
 
@@ -224,6 +263,248 @@ def safe_operation():
     except Exception as e:
         logger.error(f"Unexpected error: {e}")
         raise
+```
+
+## Web Development Patterns
+
+### FastAPI Development
+
+#### Application Structure
+```python
+from fastapi import FastAPI, Request, Form
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
+
+app = FastAPI(title="YouTube Transcriptor")
+templates = Jinja2Templates(directory="src/templates")
+```
+
+#### Route Definitions
+```python
+@app.get("/", response_class=HTMLResponse)
+async def index(request: Request):
+    """Render homepage with form."""
+    return templates.TemplateResponse(request, "index.html")
+
+@app.post("/extract", response_class=HTMLResponse)
+async def extract_transcript(
+    request: Request,
+    url: str = Form(...),
+    format_type: str = Form(default="txt")
+):
+    """Process transcript extraction."""
+    # Processing logic
+    return templates.TemplateResponse(request, "result.html", context)
+```
+
+#### Form Handling
+```python
+# Form validation and processing
+async def process_form_data(request: Request):
+    """Process and validate form submission."""
+    form = await request.form()
+    url = form.get("url")
+    format_type = form.get("format_type", "txt")
+
+    # Validation
+    if not validate_youtube_url(url):
+        raise InvalidVideoURLError("Invalid YouTube URL")
+
+    return url, format_type
+```
+
+### Template Development
+
+#### Jinja2 Template Structure
+```html
+{% extends "base.html" %}
+
+{% block title %}Custom Page Title{% endblock %}
+
+{% block content %}
+<div class="container">
+    {% if success %}
+        <div class="success-message">
+            ✅ Operation completed successfully!
+        </div>
+    {% else %}
+        <div class="error-message">
+            ❌ An error occurred: {{ error }}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+```
+
+#### Template Inheritance
+```html
+<!-- base.html -->
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}YouTube Transcriptor{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <style>
+        /* Custom styles */
+        .container { max-width: 800px; margin: 0 auto; }
+    </style>
+</head>
+<body>
+    <main class="container">
+        <header>
+            <h1>🎬 YouTube Transcriptor</h1>
+        </header>
+
+        {% block content %}{% endblock %}
+
+        <footer>
+            <hr>
+            <p><small>YouTube Transcriptor</small></p>
+        </footer>
+    </main>
+</body>
+</html>
+```
+
+### HTML/CSS Best Practices
+
+#### Responsive Design
+```css
+/* Mobile-first responsive design */
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 0.5rem;
+    }
+
+    .download-section {
+        flex-direction: column;
+    }
+}
+```
+
+#### Form Styling
+```css
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.transcript-content {
+    background: var(--code-background-color, #f8f9fa);
+    border-radius: var(--border-radius, 0.25rem);
+    padding: 1rem;
+    font-family: monospace;
+    white-space: pre-wrap;
+    max-height: 400px;
+    overflow-y: auto;
+}
+```
+
+### Web-Specific Testing
+
+#### FastAPI Test Client
+```python
+from fastapi.testclient import TestClient
+from src.web_app import app
+
+client = TestClient(app)
+
+def test_web_interface():
+    """Test web interface endpoints."""
+    # Test homepage
+    response = client.get("/")
+    assert response.status_code == 200
+    assert "YouTube Transcriptor" in response.text
+
+    # Test form submission
+    response = client.post("/extract", data={
+        "url": "https://www.youtube.com/watch?v=test123",
+        "format_type": "txt"
+    })
+    assert response.status_code == 200
+```
+
+#### Template Testing
+```python
+def test_template_rendering():
+    """Test template context rendering."""
+    from fastapi.templating import Jinja2Templates
+
+    templates = Jinja2Templates(directory="src/templates")
+
+    # Mock request object
+    class MockRequest:
+        def __init__(self):
+            self.base_url = "http://localhost:8000"
+
+    request = MockRequest()
+    context = {"success": True, "video_title": "Test Video"}
+
+    # Test template rendering
+    response = templates.TemplateResponse(request, "result.html", context)
+    assert "Test Video" in response.body.decode()
+```
+
+### Web Development Workflow
+
+#### Development Server
+```bash
+# Start development server with auto-reload
+uv run uvicorn src.web_app:app --reload --host 0.0.0.0 --port 8000
+
+# Start with debug logging
+uv run uvicorn src.web_app:app --reload --log-level debug
+```
+
+#### Browser Testing Checklist
+- [ ] Test all workflows in multiple browsers (Chrome, Firefox, Safari, Edge)
+- [ ] Verify responsive design on mobile and desktop
+- [ ] Test form validation and error handling
+- [ ] Verify file download functionality
+- [ ] Test accessibility features (keyboard navigation, screen readers)
+- [ ] Check Italian language display and formatting
+
+#### Debugging Web Applications
+```python
+# Enable debug mode
+import uvicorn
+
+if __name__ == "__main__":
+    uvicorn.run(
+        "web_app:app",
+        host="127.0.0.1",
+        port=8000,
+        reload=True,
+        log_level="debug"
+    )
+```
+
+#### Performance Monitoring
+```python
+# Add request timing middleware
+import time
+from fastapi import Request
+
+@app.middleware("http")
+async def add_process_time_header(request: Request, call_next):
+    start_time = time.time()
+    response = await call_next(request)
+    process_time = time.time() - start_time
+    response.headers["X-Process-Time"] = str(process_time)
+    return response
 ```
 
 ## Testing Strategy

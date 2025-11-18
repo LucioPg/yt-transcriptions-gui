@@ -8,11 +8,102 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Comprehensive technical documentation
-- Developer contribution guidelines
-- API documentation with examples
-- Architecture documentation
-- Development setup guide
+- Web interface documentation with comprehensive coverage
+- Updated API documentation to include FastAPI endpoints
+- Enhanced architecture documentation for dual-interface system
+- Web development patterns and guidelines
+- Updated project structure documentation
+
+### Changed
+- Improved documentation structure for better navigation
+- Updated development setup instructions
+- Enhanced project overview with dual-interface features
+
+## [0.2.0] - 2025-11-18
+
+### Added
+- **Web Interface**: Complete FastAPI-based web application
+  - Responsive HTML interface with Pico.css styling
+  - Italian language interface for enhanced accessibility
+  - Real-time transcript preview and download functionality
+  - Form-based URL input with format selection
+  - File download system with temporary file management
+  - Comprehensive error handling with user-friendly messages
+  - Health check endpoint for monitoring
+
+- **Web API Endpoints**:
+  - `GET /`: Homepage with extraction form
+  - `POST /extract`: Process transcript extraction from form data
+  - `GET /download/{filename}`: Secure file download endpoint
+  - `GET /health`: Health check endpoint for monitoring
+
+- **Template System**:
+  - `base.html`: Base layout with Pico.css and responsive design
+  - `index.html`: Homepage with extraction form and instructions
+  - `result.html`: Results display with transcript preview and downloads
+
+- **Web Dependencies**:
+  - `fastapi>=0.121.2`: Modern web framework
+  - `jinja2>=3.1.6`: Template engine for HTML rendering
+  - `python-multipart>=0.0.20`: Form data processing
+  - `uvicorn>=0.38.0`: ASGI server for FastAPI
+  - `httpx>=0.28.1`: HTTP client for testing
+
+- **Documentation**:
+  - Complete web interface documentation (WEB_INTERFACE.md)
+  - Updated API documentation with FastAPI endpoints
+  - Enhanced architecture documentation for dual-interface system
+  - Web development patterns and guidelines
+
+### Changed
+- **Dual Interface Architecture**: Refactored to support both CLI and web interfaces
+  - Shared core functionality between interfaces
+  - Consistent behavior across all access methods
+  - Enhanced error handling for both interfaces
+
+- **Dependencies**: Updated to include web framework requirements
+- **Project Structure**: Added templates and static files directories
+- **Testing**: Extended test coverage for web interface components
+
+### Features
+- **User Experience**: Intuitive web interface for non-technical users
+- **Accessibility**: Italian language interface and responsive design
+- **Performance**: FastAPI async framework for high performance
+- **Security**: Secure file handling and path validation
+- **Monitoring**: Health check endpoint for deployment monitoring
+
+### Technical Details
+- **Framework**: FastAPI with automatic OpenAPI documentation
+- **Styling**: Pico.css for minimal, responsive design
+- **Templates**: Jinja2 with secure template rendering
+- **File Management**: Secure temporary file handling with cleanup
+- **Error Handling**: Comprehensive error management with user guidance
+
+### Web Interface Usage
+```bash
+# Start web interface
+uv run python -m src.web_app
+
+# Access at http://localhost:8000
+# API documentation at http://localhost:8000/docs
+# Health check at http://localhost:8000/health
+```
+
+### Web Testing
+```bash
+# Run web interface tests
+uv run python -m pytest tests/test_web_app.py
+
+# Test with coverage
+uv run python -m pytest tests/test_web_app.py --cov=src.web_app
+```
+
+### Deployment Ready
+- Docker support with multi-stage builds
+- Production-ready configuration
+- Environment variable support
+- Health check endpoints for load balancers
+- Secure file handling for production environments
 
 ### Changed
 - Improved error handling and validation

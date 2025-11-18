@@ -16,51 +16,120 @@ This document provides an overview of the YouTube Transcriptor architecture, des
 
 ## Overview
 
-YouTube Transcriptor is a lightweight Python CLI tool designed to extract video transcripts directly from YouTube without downloading the actual video content. The tool follows a modular architecture with clear separation of concerns, making it maintainable and extensible.
+YouTube Transcriptor is a versatile Python application that provides both CLI and web interfaces for extracting video transcripts directly from YouTube without downloading video content. The system features a dual-interface architecture with a shared core, ensuring consistency across all access methods while providing optimized experiences for different user preferences.
 
 ### Key Design Principles
 
-1. **Simplicity**: Focus on core functionality without unnecessary complexity
-2. **Modularity**: Separate concerns into distinct modules
-3. **Testability**: Design for comprehensive testing with mocking
-4. **Extensibility**: Easy to add new output formats or features
-5. **Robustness**: Graceful error handling and validation
+1. **Dual Interface Design**: Separate CLI and web interfaces sharing the same core logic
+2. **Modularity**: Clear separation between interfaces, business logic, and utilities
+3. **Testability**: Comprehensive testing with mocking for all components
+4. **Extensibility**: Easy to add new interfaces, output formats, or features
+5. **Robustness**: Graceful error handling and validation across all interfaces
+6. **Consistency**: Shared core functionality ensures identical behavior across interfaces
+7. **Accessibility**: Web interface provides user-friendly experience for non-technical users
 
 ## System Architecture
 
 ### High-Level Architecture
 
 ```
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   CLI Interface │───▶│   Business Logic │───▶│   File Handler  │
-│   (main.py)     │    │ (transcriptor.py)│    │(file_handler.py)│
-└─────────────────┘    └─────────────────┘    └─────────────────┘
-         │                       │                       │
-         │                       │                       │
-         ▼                       ▼                       ▼
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   Arg Parsing   │    │   YouTube API   │    │   File System   │
-│   (argparse)    │    │   Integration   │    │   Operations    │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
-         │                       │                       │
-         │                       │                       │
-         ▼                       ▼                       ▼
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   Utilities     │    │   Validation    │    │   Formatting    │
-│  (utils.py)     │    │    Logic        │    │    Functions    │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
+                 ┌─────────────────────────────────────────────────────────┐
+                 │                    YouTube Transcriptor                 │
+                 │                  (Dual-Interface System)               │
+                 └─────────────────────────────────────────────────────────┘
+                                      │
+                 ┌────────────────────┼────────────────────┐
+                 │                    │                    │
+        ┌────────▼────────┐  ┌───────▼───────┐   ┌────────▼─────────┐
+        │   CLI Interface │  │  Web Interface │   │  Shared Core     │
+        │    (main.py)    │  │  (web_app.py)  │   │   Modules        │
+        └─────────────────┘  └───────────────┘   └──────────────────┘
+                 │                    │                    │
+                 │                    │           ┌────────┴────────┐
+                 │                    │           │                 │
+                 ▼                    ▼    ┌──────▼─────┐   ┌───────▼──────┐
+        ┌─────────────────┐  ┌─────────────────┐ │ Transcript │   │ File Handler │
+        │   Argument      │  │   FastAPI App   │ │ Processor  │   │   Module     │
+        │   Processing    │  │   (HTTP/HTML)   │ │ (transcriptor) │ │ (file_handler)│
+        └─────────────────┘  └─────────────────┘ └─────────────┘   └──────────────┘
+                 │                    │                    │                 │
+                 │                    │                    │                 │
+                 ▼                    ▼                    ▼                 ▼
+        ┌─────────────────┐  ┌─────────────────┐   ┌─────────────────┐  ┌─────────────────┐
+        │   Command Line  │  │   HTTP Requests │   │   YouTube API   │  │   File System  │
+        │   Interaction   │  │   & Responses   │   │   Integration   │  │   Operations    │
+        └─────────────────┘  └─────────────────┘   └─────────────────┘  └─────────────────┘
+                 │                    │                    │                 │
+                 └────────────────────┴────────────────────┴─────────────────┘
+                                      │
+                                      ▼
+                        ┌─────────────────────────────┐
+                        │      Shared Utilities       │
+                        │        (utils.py)           │
+                        │  - URL Validation          │
+                        │  - Text Processing         │
+                        │  - Common Functions        │
+                        └─────────────────────────────┘
+```
+
+### Dual-Interface Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                        Core Layer (Shared)                                  │
+├─────────────────┬─────────────────┬─────────────────────────────────────────┤
+│   transcriptor  │  file_handler   │              utils                     │
+│                 │                 │                                     │
+│ • get_transcript │ • format_transcript │ • validate_youtube_url          │
+│ • get_video_title│ • save_transcript   │ • sanitize_filename              │
+│ • API Integration│ • File Operations   │ • Common utilities               │
+└─────────────────┴─────────────────┴─────────────────────────────────────────┘
+                                      │
+                                      ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                     Interface Layer (Separated)                             │
+├─────────────────────────────────┬───────────────────────────────────────────┤
+│        CLI Interface            │          Web Interface                   │
+│        (main.py)                │          (web_app.py)                    │
+│                                 │                                           │
+│ • Argument Parsing             │ • FastAPI Application                    │
+│ • User Interaction             │ • HTTP Request Handling                  │
+│ • Command Line Output          │ • HTML Template Rendering                │
+│ • Error Display                │ • File Download Management               │
+│ • Workflow Orchestration       │ • Form Processing                        │
+└─────────────────────────────────┴───────────────────────────────────────────┘
 ```
 
 ### Module Dependencies
 
 ```
-main.py
-├── transcriptor.py
-│   ├── youtube-transcript-api (external)
-│   └── utils.py
-├── file_handler.py
-│   └── utils.py
-└── utils.py
+┌─────────────────┐
+│     CLI         │
+│   Interface     │
+└─────────┬───────┘
+          │
+          ├───► transcriptor.py
+          │        ├── youtube-transcript-api (external)
+          │        └── utils.py
+          │
+          ├───► file_handler.py
+          │        └── utils.py
+          │
+          └───► utils.py
+
+┌─────────────────┐
+│     Web         │
+│   Interface     │
+└─────────┬───────┘
+          │
+          ├───► transcriptor.py (shared)
+          │        ├── youtube-transcript-api (external)
+          │        └── utils.py (shared)
+          │
+          ├───► file_handler.py (shared)
+          │        └── utils.py (shared)
+          │
+          └───► FastAPI/Jinja2/uvicorn (web dependencies)
 ```
 
 ## Component Design
@@ -133,49 +202,239 @@ main.py
 - Cross-platform filename sanitization
 - Length limiting for filename compatibility
 
+### 5. web_app.py - Web Interface
+
+**Responsibilities:**
+- FastAPI web application framework
+- HTTP request/response handling
+- HTML template rendering with Jinja2
+- Form processing and validation
+- File download management
+- Temporary file handling and cleanup
+
+**Key Features:**
+- Modern web framework with automatic API documentation
+- Responsive HTML interface with Pico.css styling
+- Italian language interface for accessibility
+- Real-time transcript preview and download
+- Secure file handling with path validation
+- Automatic cleanup of temporary resources
+- Comprehensive error handling with user-friendly messages
+
+**Web Components:**
+- **FastAPI Application**: Modern async web framework
+- **Jinja2 Templates**: Dynamic HTML rendering
+- **Static Files**: CSS, JavaScript, and asset serving
+- **Form Processing**: HTTP form data handling
+- **File Downloads**: Secure temporary file management
+- **Error Handling**: User-friendly error pages
+
+**Template System:**
+```
+src/templates/
+├── base.html          # Base layout and styling
+├── index.html         # Homepage with extraction form
+└── result.html        # Results display and download
+```
+
+**Endpoints:**
+- `GET /`: Homepage with form interface
+- `POST /extract`: Process transcript extraction
+- `GET /download/{filename}`: File download endpoint
+- `GET /health`: Health check for monitoring
+
+**Design Decisions:**
+- FastAPI for modern async web capabilities
+- Jinja2 for secure template rendering
+- Pico.css for minimal, responsive design
+- Italian interface for enhanced accessibility
+- Shared core logic for consistency
+
 ## Data Flow
 
-### Transcript Extraction Flow
+### Dual-Interface Data Flow
+
+```
+                    ┌─────────────────────────────────┐
+                    │        User Input               │
+                    └─────────────┬───────────────────┘
+                                  │
+                 ┌────────────────┼────────────────┐
+                 │                                │
+    ┌────────────▼─────────┐              ┌───────▼───────┐
+    │   CLI Interface      │              │ Web Interface │
+    │   (main.py)          │              │ (web_app.py)  │
+    └────────────┬─────────┘              └───────┬───────┘
+                 │                                │
+    ┌────────────▼─────────┐              ┌───────▼───────┐
+    │   Argument Parsing   │              │ Form Parsing  │
+    │   (argparse)         │              │ (FastAPI)     │
+    └────────────┬─────────┘              └───────┬───────┘
+                 │                                │
+                 └────────────┬─────────────────────┘
+                              │
+                ┌─────────────▼──────────────┐
+                │      Shared Core Logic     │
+                │   (transcriptor.py)        │
+                └─────────────┬──────────────┘
+                              │
+                ┌─────────────▼──────────────┐
+                │     URL Validation         │
+                │     (utils.py)             │
+                └─────────────┬──────────────┘
+                              │
+                ┌─────────────▼──────────────┐
+                │   YouTube API Integration  │
+                │ (youtube-transcript-api)   │
+                └─────────────┬──────────────┘
+                              │
+                ┌─────────────▼──────────────┐
+                │   Transcript Processing    │
+                │   (transcriptor.py)        │
+                └─────────────┬──────────────┘
+                              │
+                ┌─────────────▼──────────────┐
+                │   File Format Conversion   │
+                │  (file_handler.py)         │
+                └─────────────┬──────────────┘
+                              │
+                 ┌────────────┼────────────────┐
+                 │                            │
+    ┌────────────▼─────────┐      ┌───────────▼──────────┐
+    │    CLI Output        │      │   Web Response       │
+    │   (stdout/file)      │      │  (HTML + Download)   │
+    └──────────────────────┘      └──────────────────────┘
+```
+
+### CLI Interface Flow
 
 ```
 1. CLI Input
-   └── YouTube URL + Options
+   ├── YouTube URL (required)
+   ├── Format option (--format)
+   ├── Language option (--language)
+   └── Output directory (--output)
 
-2. URL Validation
-   └── Check URL format and extract video ID
+2. Argument Processing
+   ├── Parse command line arguments
+   ├── Validate required parameters
+   └── Set default values
 
-3. API Interaction
-   └── Request transcript from YouTube
+3. Core Processing (shared)
+   ├── URL validation
+   ├── YouTube API interaction
+   ├── Transcript extraction
+   ├── Language handling
+   └── Metadata retrieval
 
-4. Language Handling
-   ├── Try specified language (if provided)
-   └── Fallback to first available transcript
+4. File Processing
+   ├── Format conversion (TXT/SRT/VTT)
+   ├── Filename sanitization
+   ├── File conflict resolution
+   └── File system operations
 
-5. Metadata Retrieval
-   └── Extract video title for filename
-
-6. Formatting
-   ├── Convert to requested format (TXT/SRT/VTT)
-   └── Apply timestamp formatting
-
-7. File Operations
-   ├── Sanitize filename
-   ├── Handle conflicts
-   └── Write to file system
-
-8. User Feedback
+5. User Feedback
    ├── Success confirmation
-   └── Error messages
+   ├── File path display
+   ├── Error messages
+   └── Exit codes
+```
+
+### Web Interface Flow
+
+```
+1. HTTP Request
+   ├── GET / (homepage)
+   ├── POST /extract (processing)
+   └── GET /download/{file} (download)
+
+2. Form Processing
+   ├── Parse form data
+   ├── Validate URL format
+   ├── Extract parameters
+   └── Error checking
+
+3. Core Processing (shared)
+   ├── URL validation
+   ├── YouTube API interaction
+   ├── Transcript extraction
+   ├── Language handling
+   └── Metadata retrieval
+
+4. Web Processing
+   ├── Format conversion (TXT/SRT/VTT)
+   ├── Temporary file creation
+   ├── Download link generation
+   └── Template context preparation
+
+5. HTTP Response
+   ├── HTML template rendering
+   ├── Error page display
+   ├── File download headers
+   └── JavaScript interaction
+
+6. Cleanup
+   ├── Temporary file removal
+   └── Resource cleanup
 ```
 
 ### Error Handling Flow
 
 ```
-API Call
-├── Success → Continue processing
-├── No Transcript → NoTranscriptAvailableError
-├── Invalid URL → InvalidVideoURLError
-└── Network/Other → Generic Exception
+                  ┌─────────────────┐
+                  │   Request Start │
+                  └────────┬────────┘
+                           │
+            ┌──────────────┼──────────────┐
+            │              │              │
+    ┌───────▼──────┐ ┌──────▼─────┐ ┌──────▼──────┐
+    │ CLI Input    │ │ Web Input  │ │ Health Check│
+    └───────┬──────┘ └──────┬─────┘ └─────────────┘
+            │              │
+            └──────┬───────┘
+                   │
+        ┌──────────▼──────────┐
+        │   URL Validation    │
+        └──────────┬──────────┘
+                   │
+        ┌──────────▼──────────┐
+        │   API Integration   │
+        └──────────┬──────────┘
+                   │
+    ┌──────────────┼──────────────┐
+    │              │              │
+┌───▼─────┐  ┌─────▼──────┐  ┌────▼──────┐
+│ Success │  │ No Transcript│ │ Invalid URL │
+└───┬─────┘  └─────┬──────┘  └────┬──────┘
+    │              │              │
+    │         ┌────▼────┐    ┌────▼─────┐
+    │         │Display  │    │Error     │
+    │         │Message  │    │Message   │
+    │         └─────┬───┘    └─────┬────┘
+    │               │              │
+    │               └──────┬───────┘
+    │                      │
+    │        ┌─────────────▼─────────────┐
+    │        │   Format Conversion       │
+    │        └─────────────┬─────────────┘
+    │                      │
+    │        ┌─────────────▼─────────────┐
+    │        │     File Processing       │
+    │        └─────────────┬─────────────┘
+    │                      │
+    │        ┌─────────────▼─────────────┐
+    │        │   Response Generation     │
+    │        └─────────────┬─────────────┘
+    │                      │
+    │          ┌───────────▼───────────┐
+    │          │   User Feedback       │
+    │          └───────────────────────┘
+    └──────────┘
+
+Error Types:
+├── InvalidVideoURLError → User-friendly validation message
+├── NoTranscriptAvailableError → Guidance for users
+└── Generic Exception → Error recovery and logging
 ```
 
 ## Design Patterns
@@ -228,22 +487,136 @@ def main(args=None):
 
 ### Core Dependencies
 
+#### Runtime (Shared)
 - **Python 3.13+**: Modern Python with latest language features
 - **youtube-transcript-api**: External library for YouTube transcript extraction
 - **uv**: Fast Python package manager for dependency management
 
+#### Web Interface Dependencies
+- **fastapi>=0.121.2**: Modern, fast web framework for building APIs with Python 3.13+
+- **jinja2>=3.1.6**: Modern and designer-friendly templating language for Python
+- **python-multipart>=0.0.20**: Streaming multipart parser for Python
+- **uvicorn>=0.38.0**: ASGI server implementation for FastAPI applications
+- **httpx>=0.28.1**: Async HTTP client for Python (development and testing)
+
 ### Development Dependencies
 
-- **pytest**: Testing framework with powerful features
-- **coverage**: Code coverage measurement
+- **pytest>=9.0.1**: Testing framework with powerful features and async support
+- **coverage>=7.12.0**: Code coverage measurement and reporting
+- **pytest-mock>=3.15.1**: Mocking library for pytest
 - **hatchling**: Build system for package distribution
 
 ### Standard Libraries Used
 
-- **argparse**: Command-line argument parsing
-- **pathlib**: Modern file system operations
+#### Core Libraries
+- **argparse**: Command-line argument parsing (CLI interface)
+- **pathlib**: Modern file system operations with object-oriented interface
 - **re**: Regular expressions for URL validation and text processing
 - **sys**: System-level operations (exit codes, stderr)
+- **tempfile**: Temporary file creation and management
+- **shutil**: High-level file operations and directory management
+
+#### Web Libraries
+- **asyncio**: Asynchronous I/O operations for FastAPI
+- **contextlib**: Context management utilities for resource cleanup
+- **typing**: Type hints and annotations for better code documentation
+
+### External Services and Frameworks
+
+#### CSS Framework
+- **Pico.css**: Minimalist CSS framework for clean, responsive design
+  - CDN-based integration for rapid development
+  - Responsive design with mobile-first approach
+  - Minimal footprint and browser compatibility
+
+#### Template Engine
+- **Jinja2**: Powerful templating engine with:
+  - Template inheritance and inclusion
+  - Secure template rendering (auto-escaping)
+  - Template compilation and caching
+  - Extensible filter system
+
+#### Web Server
+- **Uvicorn**: High-performance ASGI server with:
+  - WebSocket support
+  - HTTP/2 capabilities
+  - Process management
+  - Graceful shutdown handling
+
+### Technology Integration
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    Technology Stack Integration                 │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐  │
+│  │   Python 3.13   │  │    FastAPI      │  │     Jinja2      │  │
+│  │   Runtime       │  │   Framework     │  │   Templates     │  │
+│  └─────────────────┘  └─────────────────┘  └─────────────────┘  │
+│           │                     │                     │         │
+│           └─────────────────────┼─────────────────────┘         │
+│                                 │                               │
+│  ┌─────────────────────────────────────────────────────────┐    │
+│  │              Core Application Logic                      │    │
+│  │  ┌─────────────────┐  ┌─────────────────┐               │    │
+│  │  │   transcriptor  │  │   file_handler  │               │    │
+│  │  │     Module      │  │     Module      │               │    │
+│  │  └─────────────────┘  └─────────────────┘               │    │
+│  └─────────────────────────────────────────────────────────┘    │
+│                                 │                               │
+│  ┌─────────────────────────────────────────────────────────┐    │
+│  │              External Dependencies                       │    │
+│  │  ┌─────────────────┐  ┌─────────────────┐               │    │
+│  │  │youtube-transcript│  │     Pico.css    │               │    │
+│  │  │     -api        │  │   Framework     │               │    │
+│  │  └─────────────────┘  └─────────────────┘               │    │
+│  └─────────────────────────────────────────────────────────┘    │
+│                                                                 │
+│  ┌─────────────────────────────────────────────────────────┐    │
+│  │               Development & Testing                     │    │
+│  │  ┌─────────────────┐  ┌─────────────────┐               │    │
+│  │  │    pytest      │  │    coverage     │               │    │
+│  │  │   Framework    │  │     Tool        │               │    │
+│  │  └─────────────────┘  └─────────────────┘               │    │
+│  └─────────────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Platform Compatibility
+
+#### Supported Platforms
+- **Development**: Windows, macOS, Linux
+- **Deployment**: Docker containers, cloud platforms, bare metal
+- **Web Browsers**: Chrome, Firefox, Safari, Edge (modern versions)
+
+#### Python Environment
+- **Minimum Version**: Python 3.13
+- **Recommended**: Python 3.13+ with latest security patches
+- **Package Manager**: uv (recommended) or pip with virtualenv
+
+### Web Technology Choices
+
+#### FastAPI Selection Rationale
+- **Performance**: High-performance async framework
+- **Type Hints**: Native Python type hinting support
+- **Automatic Documentation**: OpenAPI/Swagger generation
+- **Validation**: Pydantic integration for request/response validation
+- **Modern Python**: Supports latest Python features
+
+#### Jinja2 Selection Rationale
+- **Security**: Automatic HTML escaping
+- **Flexibility**: Powerful template inheritance
+- **Performance**: Compiled templates
+- **Ecosystem**: Mature and well-maintained
+- **Integration**: Excellent FastAPI integration
+
+#### Pico.css Selection Rationale
+- **Minimalism**: Small footprint, essential styling only
+- **Accessibility**: WCAG compliant components
+- **Responsiveness**: Mobile-first design approach
+- **Browser Support**: Excellent cross-browser compatibility
+- **Customization**: Easy to customize and extend
 
 ## Security Considerations
 
