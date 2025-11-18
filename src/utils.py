@@ -18,9 +18,11 @@ def sanitize_filename(title: str) -> str:
     """Sanitize video title for valid filename."""
     # Remove invalid characters
     sanitized = re.sub(r'[<>:"/\\|?*]', '', title)
-    # Replace multiple spaces with single space
-    sanitized = re.sub(r'\s+', ' ', sanitized).strip()
+    # Replace spaces with underscores for filenames
+    sanitized = re.sub(r'\s+', '_', sanitized.strip())
+    # Remove multiple underscores
+    sanitized = re.sub(r'_+', '_', sanitized)
     # Limit length
     if len(sanitized) > 200:
-        sanitized = sanitized[:200].rsplit(' ', 1)[0]
+        sanitized = sanitized[:200].rsplit('_', 1)[0]
     return sanitized
