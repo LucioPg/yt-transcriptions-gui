@@ -1,0 +1,23 @@
+{
+  "name": "yt-transcriptor",
+  "version": "1.0.0",
+  "description": "[![Python 3.13+](https://img.shields.io/badge/python-3.13+-blue.svg)](https://www.python.org/downloads/)\r [![Test Coverage](https://img.shields.io/badge/coverage-88%25-green.svg)](htmlcov/index.html)\r [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "tauri": "tauri",
+    "tauri:dev": "tauri dev",
+    "tauri:build": "tauri build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@tauri-apps/cli": "^2.9.4"
+  }
+}

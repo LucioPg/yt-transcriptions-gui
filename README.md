@@ -25,14 +25,15 @@ A lightweight, professional Python tool that extracts YouTube video transcripts 
 - Python 3.13+ (for development)
 - [uv](https://github.com/astral-sh/uv) package manager (recommended)
 - Windows (for executables)
+- Rust toolchain and npm (for Tauri desktop app)
 
 ### Installation Options
 
 #### Option 1: Download Executables (Recommended for Users)
 
-Download the pre-built Windows executables from the [Releases](https://github.com/your-username/yt-transcriptor/releases) page:
+Download the pre-built executables from the [Releases](https://github.com/your-username/yt-transcriptor/releases) page:
 
-- **yt-transcriptor-web.exe** - User-friendly web interface
+- **yt-transcriptor-desktop.exe** - Native desktop application (Tauri)
 - **yt-transcriptor-cli.exe** - Command-line interface for advanced users
 
 #### Option 2: Development Setup
@@ -56,27 +57,29 @@ make build-all-exe
 
 ### Windows Executables (Recommended)
 
-#### Web Interface - yt-transcriptor-web.exe
+#### Desktop Application - yt-transcriptor-desktop.exe
 
-Perfect for everyday users with a graphical interface:
+Perfect for everyday users with a native desktop experience:
 
 ```bash
-# Run the web executable
-yt-transcriptor-web.exe
+# Run the desktop application (completely self-contained)
+yt-transcriptor-desktop.exe
 
 # The application will:
-# - Start a local web server
-# - Open your browser automatically
-# - Save transcripts to ~/yt-transcriptions/
+# - Start Python backend automatically
+# - Launch in a native desktop window
+# - Find available ports dynamically
+# - Handle all internal process management
 ```
 
-The web interface provides:
-- 🎨 Clean, responsive web interface
+The desktop application provides:
+- 🎨 Native desktop window (1000x800)
 - 📝 Real-time transcript preview
-- 💾 Direct download to your home folder
+- 💾 Direct download functionality
 - 🌍 Language selection
 - ❌ User-friendly error messages
-- 📁 Automatic organization in ~/yt-transcriptions/
+- ⚡ Automatic backend management
+- 🔧 No external dependencies required
 
 #### CLI Interface - yt-transcriptor-cli.exe
 
@@ -199,9 +202,9 @@ Hello world, this is a transcript example.
 This is the second line of the transcript.
 ```
 
-## 🏗️ Dual-Executable Architecture
+## 🏗️ Dual-Interface Architecture
 
-The YouTube Transcriptor features a dual-executable architecture designed for different user needs:
+The YouTube Transcriptor features a dual-interface architecture designed for different user needs:
 
 ### Architecture Overview
 
@@ -209,8 +212,8 @@ The YouTube Transcriptor features a dual-executable architecture designed for di
 YouTube Transcriptor
 ├── CLI Executable (yt-transcriptor-cli.exe)
 │   └── Console interface for power users
-├── Web Executable (yt-transcriptor-web.exe)
-│   └── Windows native app with browser interface
+├── Desktop Application (yt-transcriptor-desktop.exe)
+│   └── Self-contained native app with integrated backend
 └── Shared Core Logic
     ├── transcriptor.py: YouTube API integration
     ├── file_handler.py: File operations
@@ -226,11 +229,12 @@ YouTube Transcriptor
 - **Output**: User-specified directory
 - **Interface**: Console with full argument support
 
-#### yt-transcriptor-web.exe
-- **Purpose**: User-friendly Windows application
-- **Target**: Everyday users, non-technical users
-- **Output**: ~/yt-transcriptions/ (automatic)
-- **Interface**: Browser-based with automatic launch
+#### yt-transcriptor-desktop.exe (Tauri Application)
+- **Purpose**: Self-contained native desktop application
+- **Target**: Everyday users who prefer desktop apps
+- **Output**: User-selected directory via download functionality
+- **Interface**: Native window (1000x800) with embedded web interface
+- **Backend**: Integrated Python backend managed automatically
 
 ### Key Components
 
@@ -348,6 +352,12 @@ yt-transcriptor/
 │   │   ├── index.html      # Homepage with extraction form
 │   │   └── result.html     # Results display page
 │   └── static/             # Static files (CSS, JS, images)
+├── src-tauri/              # Tauri desktop application
+│   ├── src/main.rs         # Rust main application with backend management
+│   ├── Cargo.toml          # Rust dependencies
+│   └── tauri.conf.json     # Tauri configuration
+├── web-dist/               # Static web assets for Tauri
+│   └── index.html          # Embedded web interface
 ├── tests/                  # Test suite
 │   ├── test_main.py        # Legacy CLI tests
 │   ├── test_transcriptor.py # Core logic tests
@@ -358,35 +368,47 @@ yt-transcriptor/
 ├── docs/                   # Documentation
 │   ├── API.md              # API documentation (CLI + Web)
 │   ├── ARCHITECTURE.md     # System architecture
+│   ├── TAURI_DESKTOP_APP.md # Tauri desktop application guide
 │   ├── CONTRIBUTING.md     # Contribution guidelines
 │   ├── DEVELOPMENT.md      # Development guide
-│   ├── WEB_INTERFACE.md    # Web interface documentation
 │   └── CHANGELOG.md        # Version history
 ├── dist/                   # Built executables
 │   ├── yt-transcriptor-cli.exe    # CLI Windows executable
-│   └── yt-transcriptor-web.exe    # Web Windows executable
+│   └── yt-transcriptor-desktop.exe # Desktop application (Tauri)
 ├── htmlcov/               # Coverage reports
 ├── transcriptions/        # Default CLI output directory
 └── yt-transcriptor-cli.spec # PyInstaller spec for CLI
 ```
 
-### Key Differences Between Executables
+### Tauri Desktop Application
 
-| Feature | yt-transcriptor-cli.exe | yt-transcriptor-web.exe |
-|---------|------------------------|------------------------|
+```bash
+# Run Tauri in development mode (backend starts automatically)
+npm run tauri:dev
+
+# Build for production (completely self-contained)
+npm run tauri:build
+```
+
+### Key Differences Between Interfaces
+
+| Feature | yt-transcriptor-cli.exe | yt-transcriptor-desktop.exe |
+|---------|------------------------|---------------------------|
 | **Target Users** | Developers, power users | Everyday users |
-| **Interface** | Console/Command line | Web browser |
-| **Output Location** | User-specified | ~/yt-transcriptions/ |
+| **Interface** | Console/Command line | Native desktop window |
+| **Output Location** | User-specified | User-selected via download |
 | **Arguments** | Full CLI argument support | Web form interface |
-| **Auto-launch** | No | Opens browser automatically |
-| **File Management** | Manual | Automatic with README |
+| **Auto-launch** | No | Native desktop window |
+| **File Management** | Manual | User-controlled downloads |
+| **Dependencies** | Python runtime | Self-contained (includes Python) |
 
 ## 📚 Documentation
 
 ### User Documentation
 - **[Web Interface Guide](docs/WEB_INTERFACE.md)** - Complete web interface documentation
+- **[Tauri Desktop App](docs/TAURI_DESKTOP_APP.md)** - Native desktop application guide
 - [API Documentation](docs/API.md) - Detailed API reference including web endpoints
-- [Architecture Guide](docs/ARCHITECTURE.md) - System design and dual-interface architecture
+- [Architecture Guide](docs/ARCHITECTURE.md) - System design and triple-interface architecture
 
 ### Developer Documentation
 - [Development Guide](docs/DEVELOPMENT.md) - Development setup, patterns, and web development
@@ -396,13 +418,13 @@ yt-transcriptor/
 ### Quick Links
 
 #### Windows Executables
-- 🌐 **Web Interface**: `yt-transcriptor-web.exe` → http://localhost:8000 (auto-launch)
+- 🖥️ **Desktop Application**: `yt-transcriptor-desktop.exe` (self-contained)
 - 🔧 **CLI Tool**: `yt-transcriptor-cli.exe "https://youtu.be/VIDEO_ID"`
 
 #### Development Mode
-- 🌐 **Web Interface**: `uv run python -m src.web_main` → http://localhost:8000
+- 🖥️ **Desktop App**: `npm run tauri:dev` (starts backend automatically)
 - 🔧 **CLI Tool**: `uv run python -m src.cli_main "https://youtu.be/VIDEO_ID"`
-- 📖 **API Docs**: http://localhost:8000/docs (when web server is running)
+- 📖 **Web Interface**: `uv run python -m src.web_main` → http://localhost:8000 (development fallback)
 
 ## 🔧 Dependencies
 

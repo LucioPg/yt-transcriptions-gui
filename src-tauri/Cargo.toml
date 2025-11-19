@@ -1,0 +1,20 @@
+[package]
+name = "yt-transcriptor"
+version = "0.1.0"
+description = "YouTube Transcriptor - Estrai trascrizioni da video YouTube"
+authors = ["yt-transcriptor"]
+edition = "2021"
+
+[build-dependencies]
+tauri-build = { version = "2.0", features = [] }
+
+[dependencies]
+tauri = { version = "2.9.3", features = [] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+tokio = { version = "1.0", features = ["full"] }
+reqwest = { version = "0.11", features = ["json", "blocking"] }
+
+[features]
+default = ["custom-protocol"]
+custom-protocol = ["tauri/custom-protocol"]
