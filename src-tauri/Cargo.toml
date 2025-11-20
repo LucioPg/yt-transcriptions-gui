@@ -6,15 +6,22 @@ authors = ["yt-transcriptor"]
 edition = "2021"
 
 [build-dependencies]
-tauri-build = { version = "2.0", features = [] }
+tauri-build = { version = "2.1", features = [] }
 
 [dependencies]
-tauri = { version = "2.9.3", features = [] }
+tauri = { version = "2.1", features = [] }  # Minimal features for production
+tauri-plugin-shell = "2.3"
+# tauri-plugin-dialog = "2.4" # Temporarily disabled to fix TaskDialogIndirect issue
+# tauri-plugin-updater = "2.9" # Temporarily disabled
+# tauri-plugin-process = "2.3" # Temporarily disabled
+tauri-plugin-single-instance = "2.3"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
-tokio = { version = "1.0", features = ["full"] }
-reqwest = { version = "0.11", features = ["json", "blocking"] }
+tokio = { version = "1.0", features = ["rt-multi-thread", "macros"] }
+reqwest = { version = "0.12", features = ["json", "blocking"] }
+ureq = "2.10"
 
 [features]
-default = ["custom-protocol"]
+# This feature is used for production builds or when `devPath` points to the filesystem and you don't want to provide your own server
+# DO NOT REMOVE!!
 custom-protocol = ["tauri/custom-protocol"]
