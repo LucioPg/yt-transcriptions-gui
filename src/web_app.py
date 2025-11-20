@@ -14,9 +14,10 @@ from typing import Optional
 import tempfile
 import shutil
 
-from .transcriptor import get_transcript, get_video_title, NoTranscriptAvailableError, InvalidVideoURLError
-from .file_handler import format_transcript, save_transcript
-from .utils import validate_youtube_url
+from src.transcriptor import (get_transcript, get_video_title, NoTranscriptAvailableError,
+                            InvalidVideoURLError)
+from src.file_handler import format_transcript, save_transcript
+from src.utils import validate_youtube_url
 
 # Initialize FastAPI app with lifespan
 from contextlib import asynccontextmanager
@@ -37,8 +38,8 @@ app = FastAPI(
 )
 
 # Mount static files and setup templates
-app.mount("/static", StaticFiles(directory="src/static"), name="static")
-templates = Jinja2Templates(directory="src/templates")
+app.mount("/static", StaticFiles(directory="./static"), name="static")
+templates = Jinja2Templates(directory="./templates")
 
 # Temporary directory for file downloads
 TEMP_DIR = Path(tempfile.mkdtemp(prefix="yt_transcriptor_"))
@@ -158,8 +159,8 @@ if __name__ == "__main__":
     import uvicorn
 
     print("🚀 Starting YouTube Transcriptor Web Interface")
-    print("📍 Open http://localhost:8000 in your browser")
-    print("📖 Documentation: http://localhost:8000/docs")
+    print("📍 Open http://localhost:8031 in your browser")
+    print("📖 Documentation: http://localhost:8031/docs")
     print("🛑 Press Ctrl+C to stop the server")
 
     uvicorn.run(
