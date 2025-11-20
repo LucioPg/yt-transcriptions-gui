@@ -15,3 +15,5 @@ transcriptions
 /dist
 /node_modules
 /package-lock.json
+/src-tauri/dist/
+/src-tauri/build/
