@@ -10,3 +10,4 @@ transcriptions
 *.txt
 *.srt
 *.vtt
+/src-tauri/target/
