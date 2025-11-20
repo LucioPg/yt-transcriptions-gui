@@ -1,6 +1,6 @@
 uv.lock
 .claude
-.idea
+/.idea
 */*.log
 /.coverage
 htmlcov
