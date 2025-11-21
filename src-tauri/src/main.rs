@@ -1,6 +1,6 @@
 // Disable windows subsystem for debugging to prevent STATUS_ENTRYPOINT_NOT_FOUND
 // Re-enable for production builds
-// #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 use std::path::PathBuf;
 use std::process::{Child, Command};
@@ -15,6 +15,7 @@ static BACKEND_EXE: &[u8] = include_bytes!("../../dist/yt-transcriptor-backend.e
 
 #[cfg(not(target_os = "windows"))]
 static BACKEND_EXE: &[u8] = include_bytes!("../../dist/yt-transcriptor-backend");
+
 
 // Application state to manage the backend process
 #[derive(Clone)]
@@ -93,6 +94,18 @@ impl AppState {
 
     #[cfg_attr(debug_assertions, allow(unused_variables))]
     fn start_backend(&self, _app_handle: &AppHandle) -> Result<String, String> {
+        // First check if backend is already responding
+        if let Ok(client) = reqwest::blocking::Client::builder()
+            .timeout(std::time::Duration::from_secs(2))
+            .build() {
+            if let Ok(response) = client.get("http://127.0.0.1:8031/health").send() {
+                if response.status().is_success() {
+                    println!("Backend is already running and responding");
+                    return Ok("http://127.0.0.1:8031".to_string());
+                }
+            }
+        }
+
         // Check if process is already running
         if let Ok(mut process_guard) = self.backend_process.lock() {
             if let Some(child) = process_guard.as_mut() {
@@ -127,7 +140,10 @@ impl AppState {
                 .arg("-m")
                 .arg("uvicorn")
                 .arg("src.web_app:app")
-                .args(&["--host", "127.0.0.1", "--port", "8031"])
+                .args(&[
+                    "--host", "127.0.0.1",
+                    "--port", "8031"
+                ])
                 .current_dir(project_root)
                 .spawn()
                 .map_err(|e| format!("Failed to start Python backend: {}", e))?;
