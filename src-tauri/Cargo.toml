@@ -9,7 +9,7 @@ edition = "2021"
 tauri-build = { version = "2.1", features = [] }
 
 [dependencies]
-tauri = { version = "2.1", features = [] }  # Minimal features for production
+tauri = { version = "2.1", features = ["devtools"] }  # Minimal features for production
 tauri-plugin-shell = "2.3"
 # tauri-plugin-dialog = "2.4" # Temporarily disabled to fix TaskDialogIndirect issue
 # tauri-plugin-updater = "2.9" # Temporarily disabled
