@@ -1,0 +1,210 @@
+/* YouTube Transcriptor Custom Styles */
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.form-container {
+    background: var(--card-background-color, #fff);
+    border-radius: var(--border-radius, 0.25rem);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.result-container {
+    background: var(--card-background-color, #fff);
+    border-radius: var(--border-radius, 0.25rem);
+    padding: 1.5rem;
+}
+
+.transcript-content {
+    background: var(--code-background-color, #f8f9fa);
+    border-radius: var(--border-radius, 0.25rem);
+    padding: 1rem;
+    font-family: var(--font-family, monospace);
+    white-space: pre-wrap;
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid var(--muted-border-color, #e1e5e9);
+}
+
+.error-message {
+    background: var(--del-background-color, #fff5f5);
+    border: 1px solid var(--del-border-color, #feb2b2);
+    border-radius: var(--border-radius, 0.25rem);
+    padding: 1rem;
+    margin: 1rem 0;
+}
+
+.success-message {
+    background: var(--ins-background-color, #f0fff4);
+    border: 1px solid var(--ins-border-color, #9ae6b4);
+    border-radius: var(--border-radius, 0.25rem);
+    padding: 1rem;
+    margin: 1rem 0;
+}
+
+.download-section {
+    margin-top: 1rem;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.video-info {
+    background: var(--card-background-color, #fff);
+    border: 1px solid var(--muted-border-color, #e1e5e9);
+    border-radius: var(--border-radius, 0.25rem);
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.stat-item {
+    text-align: center;
+    padding: 0.5rem;
+    background: var(--background-color, #fafbfc);
+    border-radius: var(--border-radius, 0.25rem);
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.loading {
+    display: none;
+    text-align: center;
+    margin: 2rem 0;
+}
+
+.spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #3498db;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 2s linear infinite;
+    margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+    }
+
+    .download-section {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
+
+/* Backend notification styles */
+.backend-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    max-width: 400px;
+    border-radius: var(--border-radius, 0.25rem);
+    padding: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    animation: slideIn 0.3s ease-out;
+}
+
+.backend-notification.success {
+    background: var(--ins-background-color, #f0fff4);
+    border: 1px solid var(--ins-border-color, #9ae6b4);
+    color: var(--ins-color, #22543d);
+}
+
+.backend-notification.warning {
+    background: #fffbeb;
+    border: 1px solid #f6e05e;
+    color: #744210;
+}
+
+.backend-notification.error {
+    background: var(--del-background-color, #fff5f5);
+    border: 1px solid var(--del-border-color, #feb2b2);
+    color: var(--del-color, #742a2a);
+}
+
+.backend-notification.info {
+    background: var(--code-background-color, #f8f9fa);
+    border: 1px solid var(--muted-border-color, #e1e5e9);
+    color: var(--muted-color, #666);
+}
+
+.notification-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.notification-close {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    opacity: 0.7;
+    padding: 0;
+    margin: 0;
+}
+
+.notification-close:hover {
+    opacity: 1;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Additional utility classes */
+.full-width {
+    width: 100%;
+}
+
+.hidden {
+    display: none;
+}
+
+.footer-center {
+    text-align: center;
+    color: var(--muted-color);
+}
+
+.primary-link {
+    color: var(--primary);
+}
