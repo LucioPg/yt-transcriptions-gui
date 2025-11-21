@@ -7,7 +7,6 @@ Saves transcripts to user's home directory under yt-transcriptions.
 """
 
 import sys
-import os
 import webbrowser
 from pathlib import Path
 import time
@@ -238,7 +237,8 @@ def main():
     uvicorn.run(
         app_instance,
         host="127.0.0.1",
-        port=8000,
+        port=8031,
+        reload=False,
         log_level="info"
     )
 
