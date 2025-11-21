@@ -439,25 +439,50 @@
             showLoading();
 
             try {
-                const response = await fetch(`${API_BASE}/extract`, {
+                const formData = new FormData();
+                formData.append('url', data.url);
+                formData.append('format_type', data.format_type);
+                if (data.language) {
+                    formData.append('language', data.language);
+                }
+
+                const response = await fetch(`${API_BASE}/api/transcript`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: new URLSearchParams(data)
+                    body: formData
                 });
 
-                const html = await response.text();
+                const result = await response.json();
 
-                if (response.ok) {
-                    // Parse the returned HTML to extract the result content
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(html, 'text/html');
-                    const resultContent = doc.querySelector('#content')?.innerHTML || html;
-
-                    showResults(resultContent, true);
+                if (response.ok && result.success) {
+                    // Format the result for display
+                    const resultHtml = `
+                        <div class="result-container">
+                            <div class="video-info">
+                                <h3>📹 ${result.video_title}</h3>
+                                <div class="stats">
+                                    <div class="stat-item">
+                                        <strong>Formato</strong><br>
+                                        ${data.format_type.toUpperCase()}
+                                    </div>
+                                    <div class="stat-item">
+                                        <strong>File salvato</strong><br>
+                                        ${result.filename}
+                                    </div>
+                                </div>
+                            </div>
+                            <h3>📝 Trascrizione</h3>
+                            <div class="transcript-content">${result.transcript}</div>
+                            <div class="download-section">
+                                <button onclick="downloadTranscript('${result.filename}', '${result.transcript}', '${data.format_type}')" class="primary">
+                                    💾 Scarica ${data.format_type.toUpperCase()}
+                                </button>
+                                <a href="#" id="newExtraction" style="color: var(--primary);">← Nuova estrazione</a>
+                            </div>
+                        </div>
+                    `;
+                    showResults(resultHtml, true);
                 } else {
-                    showError('Errore del server: ' + response.statusText);
+                    showError(result.error || 'Errore del server: ' + response.statusText);
                 }
             } catch (error) {
                 console.error('Error:', error);
@@ -504,6 +529,18 @@
                     showMainForm();
                 });
             });
+        }
+
+        function downloadTranscript(filename, content, format) {
+            const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
         }
 
         function showError(message) {
