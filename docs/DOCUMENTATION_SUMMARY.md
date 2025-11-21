@@ -10,17 +10,17 @@ The YouTube Transcriptor project now has professional-grade documentation that c
 
 ### Core Documentation Files
 
-| File | Purpose | Audience | Key Features |
-|------|---------|----------|--------------|
-| [README.md](../README.md) | Project overview & dual-executable guide | End users, developers | Installation, executable usage, feature overview |
-| [docs/README.md](docs/README.md) | Documentation hub | All users | Navigation guide, documentation overview |
-| [API.md](docs/API.md) | Detailed API reference | Developers, integrators | CLI commands, web endpoints, function documentation |
-| [ARCHITECTURE.md](docs/ARCHITECTURE.md) | Dual-executable system architecture | Developers, architects | Executable design, component interaction, patterns |
-| [DEVELOPMENT.md](docs/DEVELOPMENT.md) | Development setup & executable building | Contributors, developers | Environment setup, PyInstaller builds, testing |
-| [BUILD.md](docs/BUILD.md) | Windows executable building guide | Developers, packagers | PyInstaller configuration, distribution, troubleshooting |
-| [USER_GUIDE.md](docs/USER_GUIDE.md) | Comprehensive user guide | End users, non-technical users | Both executables, troubleshooting, examples |
-| [CONTRIBUTING.md](docs/CONTRIBUTING.md) | Contribution guidelines | Community, contributors | Workflow, standards, pull request process |
-| [CHANGELOG.md](docs/CHANGELOG.md) | Version history | All users | Release notes, version history |
+| File                                 | Purpose | Audience | Key Features |
+|--------------------------------------|---------|----------|--------------|
+| [README.md](../README.md)            | Project overview & dual-executable guide | End users, developers | Installation, executable usage, feature overview |
+| [docs/README.md](./README.md)        | Documentation hub | All users | Navigation guide, documentation overview |
+| [API.md](./API.md)                   | Detailed API reference | Developers, integrators | CLI commands, web endpoints, function documentation |
+| [ARCHITECTURE.md](./ARCHITECTURE.md) | Dual-executable system architecture | Developers, architects | Executable design, component interaction, patterns |
+| [DEVELOPMENT.md](./DEVELOPMENT.md)   | Development setup & executable building | Contributors, developers | Environment setup, PyInstaller builds, testing |
+| [BUILD.md](./BUILD.md)               | Windows executable building guide | Developers, packagers | PyInstaller configuration, distribution, troubleshooting |
+| [USER_GUIDE.md](./USER_GUIDE.md)     | Comprehensive user guide | End users, non-technical users | Both executables, troubleshooting, examples |
+| [CONTRIBUTING.md](./CONTRIBUTING.md) | Contribution guidelines | Community, contributors | Workflow, standards, pull request process |
+| [CHANGELOG.md](./CHANGELOG.md)       | Version history | All users | Release notes, version history |
 
 ### Development Tools
 

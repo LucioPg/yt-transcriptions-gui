@@ -1,0 +1,1 @@
+This file ensures that the static directory is included in the PyInstaller bundle.
