@@ -16,31 +16,32 @@
         "minWidth": 800,
         "minHeight": 600,
         "resizable": true,
-        "fullscreen": false,
-        "url": "../web-dist/index.html"
+        "fullscreen": false
+
       }
     ],
     "security": {
-      "csp": "default-src 'self' http://127.0.0.1:8031"
+      "csp": "default-src 'self' http://127.0.0.1:8031; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src 'self' http://127.0.0.1:8031;"
     }
   },
   "bundle": {
     "active": true,
     "targets": ["nsis"],
     "icon": [
-      "icons/32x32.png",
-      "icons/icon.ico",
-      "icons/icon.png",
-      "icons/icon.svg"
+      "icons/32x32.ico",
+      "icons/48x48.ico",
+      "icons/64x64.ico",
+      "icons/128x128.ico",
+      "icons/256x256.ico",
+      "icons/favicon.ico"
     ],
     "resources": [
-      "resources/*"
     ],
     "windows": {
       "nsis": {
         "installMode": "perMachine",
         "displayLanguageSelector": false,
-        "installerIcon": "icons/icon.ico"
+        "installerIcon": "icons/favicon.ico"
       }
     }
   },
