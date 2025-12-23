@@ -24,6 +24,15 @@
     padding: 1.5rem;
 }
 
+.result-header {
+    display: flex; justify-content: space-between
+}
+
+#copy-btn {
+    height: 3rem;
+    width: 6rem;
+}
+
 .transcript-content {
     background: var(--code-background-color, #f8f9fa);
     border-radius: var(--border-radius, 0.25rem);

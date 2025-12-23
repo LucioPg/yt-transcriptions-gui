@@ -13,6 +13,8 @@ const newExtractionBtn = document.getElementById('newExtraction');
 let API_BASE = '';
 let backendMonitorInterval = null;
 let isBackendHealthy = false;
+// Store current result data for copy/download functionality
+let currentResult = null;
 
 // Initialize backend and get URL
 async function initializeBackend() {
@@ -101,9 +103,14 @@ function showNotification(message, type = 'info') {
     notification.innerHTML = `
         <div class="notification-content">
             <span class="notification-message">${message}</span>
-            <button class="notification-close" onclick="this.parentElement.parentElement.remove()">×</button>
+            <button class="notification-close">×</button>
         </div>
     `;
+
+    // Add event listener to close button
+    notification.querySelector('.notification-close').addEventListener('click', () => {
+        notification.remove();
+    });
 
     document.body.appendChild(notification);
 
@@ -141,7 +148,14 @@ transcriptForm.addEventListener('submit', async (e) => {
         const result = await response.json();
 
         if (response.ok && result.success) {
-            // Format the result for display
+            // Store current result for copy/download functionality
+            currentResult = {
+                transcript: result.transcript,
+                filename: result.filename,
+                format: data.format_type
+            };
+
+            // Format the result for display (NO inline onclick handlers)
             const resultHtml = `
                 <div class="result-container">
                     <div class="video-info">
@@ -157,10 +171,13 @@ transcriptForm.addEventListener('submit', async (e) => {
                             </div>
                         </div>
                     </div>
-                    <h3>📝 Trascrizione</h3>
+                    <div class="result-header">
+                        <h3>📝 Trascrizione</h3>
+                        <button id="copy-btn" style="height: 3rem;width: 6rem;">Copia</button>
+                    </div>
                     <div class="transcript-content">${result.transcript}</div>
                     <div class="download-section">
-                        <button onclick="downloadTranscript('${result.filename}', '${result.transcript}', '${data.format_type}')" class="primary">
+                        <button id="download-btn" class="primary">
                             💾 Scarica ${data.format_type.toUpperCase()}
                         </button>
                         <a href="#" id="newExtraction" class="primary-link">← Nuova estrazione</a>
@@ -216,10 +233,26 @@ function showResults(content, success) {
             showMainForm();
         });
     });
+
+    // Add event listeners for copy button (if exists)
+    const copyBtn = results.querySelector('#copy-btn');
+    if (copyBtn && currentResult) {
+        copyBtn.addEventListener('click', () => {
+            copyToClipboard(currentResult.transcript);
+        });
+    }
+
+    // Add event listeners for download button (if exists)
+    const downloadBtn = results.querySelector('#download-btn');
+    if (downloadBtn && currentResult) {
+        downloadBtn.addEventListener('click', () => {
+            downloadTranscript(currentResult.filename, currentResult.transcript, currentResult.format);
+        });
+    }
 }
 
 function downloadTranscript(filename, content, format) {
-    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+    const blob = new Blob([content], {type: 'text/plain;charset=utf-8'});
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -230,6 +263,14 @@ function downloadTranscript(filename, content, format) {
     URL.revokeObjectURL(url);
 }
 
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(() => {
+        showNotification('Trascrizione copiata negli appunti', 'success');
+    }, () => {
+        showNotification('Errore durante la copia negli appunti', 'error');
+    });
+}
+
 function showError(message) {
     showResults(`
         <div class="error-message">
@@ -237,12 +278,20 @@ function showError(message) {
             <p><strong>Errore di connessione</strong></p>
             <p>${message}</p>
             <div style="margin-top: 1rem;">
-                <button onclick="location.reload()" class="primary">
+                <button id="reload-btn" class="primary">
                     ↻ Riavvia Applicazione
                 </button>
             </div>
         </div>
     `, false);
+
+    // Add event listener for reload button
+    const reloadBtn = results.querySelector('#reload-btn');
+    if (reloadBtn) {
+        reloadBtn.addEventListener('click', () => {
+            location.reload();
+        });
+    }
 }
 
 // Initialize application
@@ -256,7 +305,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
         let isHealthy;
         if (invoke) {
-            isHealthy = await invoke('check_backend_status', { url: API_BASE });
+            isHealthy = await invoke('check_backend_status', {url: API_BASE});
         } else {
             const response = await fetch(`${API_BASE}/health`);
             isHealthy = response.ok;

@@ -37,7 +37,16 @@
 
 <!-- Transcript Content -->
 <div class="result-container">
-    <h3>📄 Trascrizione</h3>
+    <div class="result-header" style="
+    display: flex;
+    justify-content: space-between;">
+        <h3>📝 Trascrizione</h3>
+        <button id="copy-btn" style="
+    height: 3rem;
+    width: 6rem;
+"> Copia
+        </button>
+    </div>
     <div class="transcript-content">{{ transcript_content }}</div>
 
     <!-- Download Section -->
@@ -64,7 +73,8 @@
     {% elif error_type == "no_transcript" %}
     <p><strong>Trascrizione non disponibile</strong></p>
     <p>{{ error }}</p>
-    <p>Questo video potrebbe non avere trascrizioni disponibili. Prova con un altro video o controlla se il video ha trascrizioni abilitate su YouTube.</p>
+    <p>Questo video potrebbe non avere trascrizioni disponibili. Prova con un altro video o controlla se il video ha
+        trascrizioni abilitate su YouTube.</p>
 
     {% else %}
     <p><strong>Errore imprevisto</strong></p>
@@ -93,7 +103,8 @@
     <h4>Links Utili</h4>
     <ul>
         <li><a href="/" target="_self">← Torna alla home</a></li>
-        <li><a href="https://support.google.com/youtube/answer/2734796" target="_blank">Come aggiungere trascrizioni ai video YouTube</a></li>
+        <li><a href="https://support.google.com/youtube/answer/2734796" target="_blank">Come aggiungere trascrizioni ai
+            video YouTube</a></li>
     </ul>
 </div>
 {% endblock %}
