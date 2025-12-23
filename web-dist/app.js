@@ -249,6 +249,15 @@ function showResults(content, success) {
             downloadTranscript(currentResult.filename, currentResult.transcript, currentResult.format);
         });
     }
+
+    // Add event listener for new extraction link (if exists)
+    const newExtractionLink = results.querySelector('#newExtraction');
+    if (newExtractionLink) {
+        newExtractionLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            showMainForm();
+        });
+    }
 }
 
 async function downloadTranscript(filename, content, format) {

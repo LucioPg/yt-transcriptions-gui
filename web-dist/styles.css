@@ -217,3 +217,11 @@
 .primary-link {
     color: var(--primary);
 }
+
+h3 .icon,
+h2 .icon,
+h1 .icon {
+    vertical-align: middle;
+    margin-right: 6px;
+    margin-bottom: 5px;
+}
