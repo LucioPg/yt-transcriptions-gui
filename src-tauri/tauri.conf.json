@@ -28,13 +28,17 @@
     "active": true,
     "targets": ["nsis"],
     "icon": [
-      "icons/icon.ico"
+        "icons/icon.ico",
+        "icons/icon.icns",
+        "icons/32x32.png",
+        "icons/64x64.png",
+        "icons/128x128.png"
     ],
     "resources": [
     ],
     "windows": {
       "nsis": {
-        "installMode": "perMachine",
+        "installMode": "currentUser",
         "displayLanguageSelector": false,
         "installerIcon": "icons/icon.ico"
       }

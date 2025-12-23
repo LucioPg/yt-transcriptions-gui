@@ -3,20 +3,9 @@ use std::fs;
 use std::path::Path;
 use std::process::Command;
 
-fn configure_windows_manifest() {
-    // Configure custom Windows manifest to fix TaskDialogIndirect issue
-    #[cfg(target_os = "windows")]
-    {
-        println!("cargo:rerun-if-changed=app.manifest");
-        // Embed the custom manifest
-        println!("cargo:rustc-link-arg=/MANIFEST:EMBED");
-        println!("cargo:rustc-link-arg=/MANIFESTINPUT:app.manifest");
-    }
-}
-
 fn main() {
-    // Configure Windows manifest first
-    configure_windows_manifest();
+    // Run tauri_build to embed icon and other resources (uses default manifest)
+    tauri_build::build();
 
     println!("cargo:rerun-if-changed=../src");
     println!("cargo:rerun-if-changed=../pyproject.toml");
