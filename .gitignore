@@ -17,3 +17,4 @@ transcriptions
 /package-lock.json
 /src-tauri/dist/
 /src-tauri/build/
+/target
