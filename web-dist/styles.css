@@ -1,5 +1,40 @@
 /* YouTube Transcriptor Custom Styles */
 
+/* Theme variables */
+:root {
+    /* Light theme - normal colors */
+    --background-color: #ffffff;
+    --card-background-color: #ffffff;
+    --text-color: #1a1a1a;
+    --muted-color: #4a5568;
+    --primary: #535dea;
+    --code-background-color: #f8f9fa;
+    --border-color: #e2e8f0;
+
+    /* Toggle colors (inverted) */
+    --toggle-bg: #535dea;
+}
+
+[data-theme="dark"] {
+    /* Dark theme - normal colors */
+    --background-color: #1a1a1a;
+    --card-background-color: #2d3748;
+    --text-color: #e5e5e5;
+    --muted-color: #a0aec0;
+    --primary: #535dea;
+    --code-background-color: #374151;
+    --border-color: #4a5568;
+
+    /* Toggle colors (inverted) */
+    --toggle-bg: #ffffff;
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
 .container {
     max-width: 800px;
     margin: 0 auto;
@@ -7,8 +42,51 @@
 }
 
 .header {
-    text-align: center;
     margin-bottom: 2rem;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.header hgroup {
+    flex: 1;
+}
+
+/* Theme toggle button */
+.theme-toggle {
+    position: relative;
+    width: 50px;
+    height: 26px;
+    background: var(--toggle-bg);
+    border: 2px solid var(--border-color);
+    border-radius: 13px;
+    cursor: pointer;
+    padding: 0;
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+}
+
+.theme-toggle:hover {
+    border-color: var(--primary);
+}
+
+.theme-indicator {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 16px;
+    height: 16px;
+    background: var(--primary);
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+}
+
+[data-theme="dark"] .theme-indicator {
+    transform: translateX(24px);
 }
 
 .form-container {

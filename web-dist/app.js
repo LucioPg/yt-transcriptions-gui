@@ -3,6 +3,28 @@
 // Tauri API for backend management
 const invoke = window.__TAURI__?.invoke;
 
+// Theme management
+function initTheme() {
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+}
+
+function toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+}
+
+// Initialize theme on load
+initTheme();
+
+// Theme toggle button
+const themeToggle = document.getElementById('theme-toggle');
+if (themeToggle) {
+    themeToggle.addEventListener('click', toggleTheme);
+}
+
 // DOM elements
 const mainForm = document.getElementById('mainForm');
 const loading = document.getElementById('loading');
@@ -211,6 +233,8 @@ function showMainForm() {
     results.style.display = 'none';
     loading.style.display = 'none';
     transcriptForm.reset();
+    // Auto-scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function showResults(content, success) {
