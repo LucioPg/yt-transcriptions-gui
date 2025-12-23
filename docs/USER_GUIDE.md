@@ -1,6 +1,6 @@
-# YouTube Transcriptor User Guide
+# YouTube Transcriptions GUI User Guide
 
-This comprehensive guide helps you get the most out of YouTube Transcriptor, whether you prefer a user-friendly web interface or powerful command-line tools.
+This comprehensive guide helps you get the most out of YouTube Transcriptions GUI, whether you prefer a user-friendly web interface or powerful command-line tools.
 
 ## Table of Contents
 
@@ -14,11 +14,11 @@ This comprehensive guide helps you get the most out of YouTube Transcriptor, whe
 
 ## Getting Started
 
-### What is YouTube Transcriptor?
+### What is YouTube Transcriptions GUI?
 
-YouTube Transcriptor extracts video transcripts directly from YouTube without downloading the video itself. This saves time, bandwidth, and storage space while giving you access to video content in text format.
+YouTube Transcriptions GUI extracts video transcripts directly from YouTube without downloading the video itself. This saves time, bandwidth, and storage space while giving you access to video content in text format.
 
-### Two Ways to Use YouTube Transcriptor
+### Two Ways to Use YouTube Transcriptions GUI
 
 1. **Web Interface** - Easy to use, visual interface for everyday users
 2. **Command Line** - Powerful interface for automation and advanced users
@@ -27,11 +27,11 @@ Choose the one that best fits your needs!
 
 ---
 
-## Web Interface (yt-transcriptor-web.exe)
+## Web Interface (yt-transcriptions-gui-web.exe)
 
 ### Quick Start
 
-1. **Double-click** `yt-transcriptor-web.exe`
+1. **Double-click** `yt-transcriptions-gui-web.exe`
 2. **Wait** for your browser to open automatically
 3. **Paste** a YouTube URL in the box
 4. **Click** "Extract Transcript"

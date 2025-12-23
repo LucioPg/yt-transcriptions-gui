@@ -1,6 +1,6 @@
 # Architecture Documentation
 
-This document provides an overview of the YouTube Transcriptor architecture, design decisions, and technical implementation details.
+This document provides an overview of the YouTube Transcriptions GUI architecture, design decisions, and technical implementation details.
 
 ## Table of Contents
 
@@ -16,7 +16,7 @@ This document provides an overview of the YouTube Transcriptor architecture, des
 
 ## Overview
 
-YouTube Transcriptor is a versatile Python application that provides both CLI and web interfaces for extracting video transcripts directly from YouTube without downloading video content. The system features a dual-interface architecture with a shared core, ensuring consistency across all access methods while providing optimized experiences for different user preferences.
+YouTube Transcriptions GUI is a versatile Python application that provides both CLI and web interfaces for extracting video transcripts directly from YouTube without downloading video content. The system features a dual-interface architecture with a shared core, ensuring consistency across all access methods while providing optimized experiences for different user preferences.
 
 ### Key Design Principles
 
@@ -34,7 +34,7 @@ YouTube Transcriptor is a versatile Python application that provides both CLI an
 
 ```
                  ┌─────────────────────────────────────────────────────────┐
-                 │                    YouTube Transcriptor                 │
+                 │                  YouTube Transcriptions GUI           │
                  │               (Dual-Executable System)                │
                  └─────────────────────────────────────────────────────────┘
                                       │
@@ -42,8 +42,8 @@ YouTube Transcriptor is a versatile Python application that provides both CLI an
         │                             │                                   │
 ┌───────▼────────┐          ┌────────▼────────┐              ┌───────────▼──────────┐
 │  CLI Executable │          │ Web Executable  │              │     Shared Core       │
-│ yt-transcriptor  │          │ yt-transcriptor  │              │     Modules          │
-│    -cli.exe     │          │   -web.exe      │              │                      │
+│yt-transcriptions  │          │yt-transcriptions  │              │     Modules          │
+│   -gui-cli.exe   │          │  -gui-web.exe    │              │                      │
 │                │          │                │              ┌────────┴────────┐     │
 │                │          │                │              │                 │     │
 └───────┬────────┘          └───────┬────────┘              │   Core Logic    │     │
@@ -90,7 +90,7 @@ YouTube Transcriptor is a versatile Python application that provides both CLI an
 │                   Executable Interface Layer (Separated)                    │
 ├─────────────────────────────────┬───────────────────────────────────────────┤
 │        CLI Executable           │          Web Executable                  │
-│      (yt-transcriptor-cli)      │      (yt-transcriptor-web)              │
+│    (yt-transcriptions-gui-cli)  │     (yt-transcriptions-gui-web)         │
 │                                 │                                           │
 │ • Console Application           │ • Windows Native Application           │
 │ • Argument Parsing (argparse)   │ • Browser Auto-launch                   │
@@ -122,13 +122,13 @@ YouTube Transcriptor is a versatile Python application that provides both CLI an
 
 ### Executable Entry Points
 
-#### CLI Executable (`yt-transcriptor-cli.exe`)
+#### CLI Executable (`yt-transcriptions-gui-cli.exe`)
 
 **File**: `src/cli_main.py`
 
 ```python
 def main(args=None):
-    """Main CLI function for yt-transcriptor-cli."""
+    """Main CLI function for yt-transcriptions-gui-cli."""
     parsed_args = parse_arguments(args)
 
     # Validate URL
@@ -149,13 +149,13 @@ def main(args=None):
 - Error output to stderr
 - User-specified output directories
 
-#### Web Executable (`yt-transcriptor-web.exe`)
+#### Web Executable (`yt-transcriptions-gui-web.exe`)
 
 **File**: `src/web_main.py`
 
 ```python
 def main():
-    """Main entry point for yt-transcriptor-web."""
+    """Main entry point for yt-transcriptions-gui-web."""
     # Ensure download directory exists
     success, download_info = ensure_download_directory()
 

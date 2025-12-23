@@ -1,5 +1,5 @@
 """
-YouTube Transcriptor Web Interface
+YouTube Transcriptions GUI Web Interface
 
 A minimal, clean web interface for extracting YouTube video transcripts
 using FastAPI and Pico.css for styling.
@@ -33,7 +33,7 @@ async def lifespan(app: FastAPI):
         shutil.rmtree(TEMP_DIR, ignore_errors=True)
 
 app = FastAPI(
-    title="YouTube Transcriptor",
+    title="YouTube Transcriptions GUI",
     description="Extract YouTube video transcripts directly without downloading videos",
     version="1.0.0",
     lifespan=lifespan
@@ -62,7 +62,7 @@ else:
     templates = Jinja2Templates(directory=str(base_dir / "templates"))
 
 # Temporary directory for file downloads
-TEMP_DIR = Path(tempfile.mkdtemp(prefix="yt_transcriptor_"))
+TEMP_DIR = Path(tempfile.mkdtemp(prefix="yt_transcriptions_gui_"))
 
 
 # API routes - always available
@@ -70,7 +70,7 @@ TEMP_DIR = Path(tempfile.mkdtemp(prefix="yt_transcriptor_"))
 async def index():
     """Root endpoint - API info."""
     return {
-        "service": "YouTube Transcriptor API",
+        "service": "YouTube Transcriptions GUI API",
         "version": "1.0.0",
         "endpoints": {
             "/health": "Health check",
@@ -276,7 +276,7 @@ async def download_file(filename: str):
 @app.get("/health")
 async def health_check():
     """Health check endpoint."""
-    return {"status": "healthy", "service": "YouTube Transcriptor"}
+    return {"status": "healthy", "service": "YouTube Transcriptions GUI"}
 
 @app.post("/shutdown")
 async def shutdown():
@@ -299,10 +299,10 @@ async def shutdown():
 if __name__ == "__main__":
     import uvicorn
 
-    print("🚀 Starting YouTube Transcriptor Web Interface")
-    print("📍 Open http://localhost:8031 in your browser")
-    print("📖 Documentation: http://localhost:8031/docs")
-    print("🛑 Press Ctrl+C to stop the server")
+    print("Starting YouTube Transcriptions GUI Web Interface")
+    print("Open http://localhost:8031 in your browser")
+    print("Documentation: http://localhost:8031/docs")
+    print("Press Ctrl+C to stop the server")
 
     # Fix module path for PyInstaller
     import sys

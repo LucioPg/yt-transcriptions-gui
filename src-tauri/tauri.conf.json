@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2.0.0",
-  "productName": "YouTube Transcriptor",
+  "productName": "YouTube Transcriptions GUI",
   "version": "0.1.0",
-  "identifier": "com.yt-transcriptor.ui",
+  "identifier": "com.yt-transcriptions-gui.ui",
   "build": {
     "frontendDist": "../web-dist"
   },
@@ -10,7 +10,7 @@
     "withGlobalTauri": true,
     "windows": [
       {
-        "title": "YouTube Transcriptor",
+        "title": "YouTube Transcriptions GUI",
         "width": 1000,
         "height": 800,
         "minWidth": 800,

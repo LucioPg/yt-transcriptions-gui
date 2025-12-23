@@ -22,7 +22,7 @@ exe = EXE(
     a.binaries,
     a.datas,
     [],
-    name='yt-transcriptor-cli',
+    name='yt-transcriptions-gui-cli',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,

@@ -1,6 +1,6 @@
 # Web Interface Documentation
 
-This comprehensive documentation covers the YouTube Transcriptor web interface, providing detailed information about setup, usage, architecture, and features of the web-based transcript extraction tool.
+This comprehensive documentation covers the YouTube Transcriptions GUI web interface, providing detailed information about setup, usage, architecture, and features of the web-based transcript extraction tool.
 
 ## Table of Contents
 
@@ -20,7 +20,7 @@ This comprehensive documentation covers the YouTube Transcriptor web interface, 
 
 ## Overview
 
-The YouTube Transcriptor web interface provides a user-friendly, browser-based alternative to the CLI tool. Built with FastAPI and styled with Pico.css, it offers a clean, responsive design with real-time transcript preview and direct download capabilities.
+The YouTube Transcriptions GUI web interface provides a user-friendly, browser-based alternative to the CLI tool. Built with FastAPI and styled with Pico.css, it offers a clean, responsive design with real-time transcript preview and direct download capabilities.
 
 ### Key Features
 

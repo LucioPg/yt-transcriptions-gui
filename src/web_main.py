@@ -1,6 +1,6 @@
 # src/web_main.py
 """
-YouTube Transcriptor Web Interface Main Entry Point
+YouTube Transcriptions GUI Web Interface Main Entry Point
 
 Windows native executable entry point for the web interface.
 Saves transcripts to user's home directory under yt-transcriptions.
@@ -29,9 +29,9 @@ def ensure_download_directory():
         # Create a README file if it doesn't exist
         readme_file = download_dir / "README.txt"
         if not readme_file.exists():
-            readme_content = """# YouTube Transcriptor Download Directory
+            readme_content = """# YouTube Transcriptions GUI Download Directory
 
-This directory contains transcripts downloaded by YouTube Transcriptor Web Interface.
+This directory contains transcripts downloaded by YouTube Transcriptions GUI Web Interface.
 
 ## Files in this directory
 - Files are named using the YouTube video title
@@ -44,7 +44,7 @@ This directory contains transcripts downloaded by YouTube Transcriptor Web Inter
 - Files are downloaded when you use the "Download" button in the web interface
 
 ## Questions
-If you have questions about YouTube Transcriptor, please refer to the project documentation.
+If you have questions about YouTube Transcriptions GUI, please refer to the project documentation.
 """
             with open(readme_file, 'w', encoding='utf-8') as f:
                 f.write(readme_content)
@@ -83,7 +83,7 @@ def create_modified_app():
 
     # Create new app with modified behavior
     modified_app = FastAPI(
-        title="YouTube Transcriptor",
+        title="YouTube Transcriptions GUI",
         description="Extract YouTube video transcripts directly without downloading videos",
         version="1.0.0",
         lifespan=lifespan
@@ -192,7 +192,7 @@ def create_modified_app():
     @modified_app.get("/health")
     async def health_check():
         """Health check endpoint."""
-        return {"status": "healthy", "service": "YouTube Transcriptor"}
+        return {"status": "healthy", "service": "YouTube Transcriptions GUI"}
 
     return modified_app
 
@@ -206,10 +206,10 @@ def open_browser(url: str, delay: float = 1.5):
         print(f"Please open this URL manually: {url}")
 
 def main():
-    """Main entry point for yt-transcriptor-web."""
+    """Main entry point for yt-transcriptions-gui-web."""
     import uvicorn
 
-    print("Starting YouTube Transcriptor Web Interface")
+    print("Starting YouTube Transcriptions GUI Web Interface")
 
     # Ensure download directory exists
     success, download_info = ensure_download_directory()

@@ -1,6 +1,6 @@
 # Documentation
 
-Welcome to the YouTube Transcriptor documentation. This comprehensive documentation suite provides everything you need to understand, use, and contribute to the project.
+Welcome to the YouTube Transcriptions GUI documentation. This comprehensive documentation suite provides everything you need to understand, use, and contribute to the project.
 
 ## 📚 Documentation Overview
 
@@ -46,7 +46,7 @@ Welcome to the YouTube Transcriptor documentation. This comprehensive documentat
 1. Read [Contributing Guidelines](CONTRIBUTING.md) for the contribution process
 2. Review the [Development Guide](DEVELOPMENT.md) for setup instructions
 3. Check the [Architecture Guide](ARCHITECTURE.md) for understanding the codebase
-4. Review existing [issues](https://github.com/your-username/yt-transcriptor/issues) for contribution ideas
+4. Review existing [issues](https://github.com/LucioPG/yt-transcriptions-gui/issues) for contribution ideas
 
 ## 📖 Documentation Structure
 
@@ -119,8 +119,8 @@ docs/
 ### Setting Up Development Environment
 
 ```bash
-git clone https://github.com/your-username/yt-transcriptor.git
-cd yt-transcriptor
+git clone https://github.com/LucioPG/yt-transcriptions-gui.git
+cd yt-transcriptions-gui
 uv sync
 uv run python -m pytest tests/
 ```
@@ -171,8 +171,8 @@ uv run python -m pytest tests/ --cov=src
 ## 🆘 Getting Help
 
 ### Documentation Issues
-- Report documentation issues via [GitHub Issues](https://github.com/your-username/yt-transcriptor/issues)
-- Suggest improvements via [GitHub Discussions](https://github.com/your-username/yt-transcriptor/discussions)
+- Report documentation issues via [GitHub Issues](https://github.com/LucioPG/yt-transcriptions-gui/issues)
+- Suggest improvements via [GitHub Discussions](https://github.com/LucioPG/yt-transcriptions-gui/discussions)
 
 ### Code Questions
 - Review [API documentation](API.md) for function details
@@ -182,7 +182,7 @@ uv run python -m pytest tests/ --cov=src
 ### Contributing
 - Follow [Contributing Guidelines](CONTRIBUTING.md)
 - Review [Development Guide](DEVELOPMENT.md)
-- Check existing [issues and pull requests](https://github.com/your-username/yt-transcriptor/pulls)
+- Check existing [issues and pull requests](https://github.com/LucioPG/yt-transcriptions-gui/pulls)
 
 ## 📈 Documentation Quality
 

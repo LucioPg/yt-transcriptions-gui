@@ -1,6 +1,6 @@
 # Building Windows Executables
 
-This guide provides comprehensive instructions for building Windows executables for YouTube Transcriptor. The project supports two separate executables targeting different user needs.
+This guide provides comprehensive instructions for building Windows executables for YouTube Transcriptions GUI. The project supports two separate executables targeting different user needs.
 
 ## Table of Contents
 
@@ -15,16 +15,16 @@ This guide provides comprehensive instructions for building Windows executables 
 
 ## Overview
 
-YouTube Transcriptor provides two Windows executables:
+YouTube Transcriptions GUI provides two Windows executables:
 
-### yt-transcriptor-cli.exe
+### yt-transcriptions-gui-cli.exe
 - **Target Audience**: Developers, power users, automation scripts
 - **Interface**: Command-line console
-- **Usage**: `yt-transcriptor-cli.exe <URL> [options]`
+- **Usage**: `yt-transcriptions-gui-cli.exe <URL> [options]`
 - **Output**: User-specified directory
 - **Size**: ~15-20 MB
 
-### yt-transcriptor-web.exe
+### yt-transcriptions-gui-web.exe
 - **Target Audience**: Everyday users, non-technical users
 - **Interface**: Web browser (automatically launched)
 - **Usage**: Double-click executable
@@ -43,8 +43,8 @@ YouTube Transcriptor provides two Windows executables:
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/yt-transcriptor.git
-cd yt-transcriptor
+git clone https://github.com/LucioPG/yt-transcriptions-gui.git
+cd yt-transcriptions-gui
 
 # Set up Python environment
 uv sync
@@ -74,8 +74,8 @@ make test-exe
 
 ### Output Location
 After building, executables will be in the `dist/` directory:
-- `dist/yt-transcriptor-cli.exe`
-- `dist/yt-transcriptor-web.exe`
+- `dist/yt-transcriptions-gui-cli.exe`
+- `dist/yt-transcriptions-gui-web.exe`
 
 ## Detailed Build Process
 
@@ -84,11 +84,11 @@ After building, executables will be in the `dist/` directory:
 #### Using PyInstaller Directly
 ```bash
 # Navigate to project root
-cd yt-transcriptor
+cd yt-transcriptions-gui
 
 # Build CLI executable
 uv run pyinstaller --onefile --console \
-  --name "yt-transcriptor-cli" \
+  --name "yt-transcriptions-gui-cli" \
   --hidden-import=transcriptor \
   --hidden-import=file_handler \
   --hidden-import=utils \
@@ -98,7 +98,7 @@ uv run pyinstaller --onefile --console \
 #### Using Spec File
 ```bash
 # Build using the existing spec file
-uv run pyinstaller yt-transcriptor-cli.spec
+uv run pyinstaller yt-transcriptions-gui-cli.spec
 ```
 
 ### 2. Web Executable Build
@@ -107,7 +107,7 @@ uv run pyinstaller yt-transcriptor-cli.spec
 ```bash
 # Build web executable with embedded resources
 uv run pyinstaller --onefile --windowed \
-  --name "yt-transcriptor-web" \
+  --name "yt-transcriptions-gui-web" \
   --add-data "src/templates;templates" \
   --add-data "src/static;static" \
   --hidden-import=transcriptor \
@@ -120,7 +120,7 @@ uv run pyinstaller --onefile --windowed \
 ```
 
 #### Create Web Executable Spec File
-Create `yt-transcriptor-web.spec`:
+Create `yt-transcriptions-gui-web.spec`:
 ```python
 # -*- mode: python ; coding: utf-8 -*-
 
@@ -157,7 +157,7 @@ exe = EXE(
     a.binaries,
     a.datas,
     [],
-    name='yt-transcriptor-web',
+    name='yt-transcriptions-gui-web',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
@@ -207,26 +207,26 @@ exe = EXE(
 
 ```bash
 # Test help functionality
-dist/yt-transcriptor-cli.exe --help
+dist/yt-transcriptions-gui-cli.exe --help
 
 # Test basic transcript extraction
-dist/yt-transcriptor-cli.exe "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+dist/yt-transcriptions-gui-cli.exe "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
 
 # Test with options
-dist/yt-transcriptor-cli.exe "https://www.youtube.com/watch?v=dQw4w9WgXcQ" \
+dist/yt-transcriptions-gui-cli.exe "https://www.youtube.com/watch?v=dQw4w9WgXcQ" \
   --format srt \
   --language en \
   --output ./test_output
 
 # Test error handling
-dist/yt-transcriptor-cli.exe "invalid-url"
+dist/yt-transcriptions-gui-cli.exe "invalid-url"
 ```
 
 ### Web Executable Testing
 
 ```bash
 # Run the web executable
-dist/yt-transcriptor-web.exe
+dist/yt-transcriptions-gui-web.exe
 
 # Manual testing checklist:
 # 1. Verify browser opens automatically
@@ -253,37 +253,37 @@ make test-cli-exe
 
 Create a release package with the following structure:
 ```
-yt-transcriptor-v1.0.0/
-├── README.txt               # Installation and usage instructions
-├── LICENSE.txt              # License information
-├── yt-transcriptor-cli.exe  # CLI executable
-├── yt-transcriptor-web.exe  # Web executable
-└── examples/                # Example usage scripts
-    ├── batch_extract.bat    # Batch processing example
-    └── api_usage.txt        # API examples
+yt-transcriptions-gui-v1.0.0/
+├── README.txt                       # Installation and usage instructions
+├── LICENSE.txt                      # License information
+├── yt-transcriptions-gui-cli.exe   # CLI executable
+├── yt-transcriptions-gui-web.exe   # Web executable
+└── examples/                        # Example usage scripts
+    ├── batch_extract.bat            # Batch processing example
+    └── api_usage.txt                # API examples
 ```
 
 ### Creating Release Package
 
 ```bash
 # Create release directory
-mkdir yt-transcriptor-v1.0.0
-cd yt-transcriptor-v1.0.0
+mkdir yt-transcriptions-gui-v1.0.0
+cd yt-transcriptions-gui-v1.0.0
 
 # Copy executables
-cp ../dist/yt-transcriptor-cli.exe .
-cp ../dist/yt-transtor-web.exe .
+cp ../dist/yt-transcriptions-gui-cli.exe .
+cp ../dist/yt-transcriptions-gui-web.exe .
 
 # Create README for release
-echo "YouTube Transcriptor v1.0.0
+echo "YouTube Transcriptions GUI v1.0.0
 
 This package contains two Windows executables for extracting YouTube transcripts.
 
 QUICK START:
-1. Run yt-transcriptor-web.exe for a user-friendly web interface
-2. Run yt-transcriptor-cli.exe --help for command-line options
+1. Run yt-transcriptions-gui-web.exe for a user-friendly web interface
+2. Run yt-transcriptions-gui-cli.exe --help for command-line options
 
-For more information, visit: https://github.com/your-username/yt-transcriptor" > README.txt
+For more information, visit: https://github.com/LucioPG/yt-transcriptions-gui" > README.txt
 
 # Copy license
 cp ../LICENSE.txt .
@@ -292,12 +292,12 @@ cp ../LICENSE.txt .
 mkdir examples
 echo "@echo off
 echo Extracting transcript from example video...
-yt-transcriptor-cli.exe \"https://www.youtube.com/watch?v=dQw4w9WgXcQ\" --format txt --output ./transcripts
+yt-transcriptions-gui-cli.exe \"https://www.youtube.com/watch?v=dQw4w9WgXcQ\" --format txt --output ./transcripts
 pause" > examples/batch_extract.bat
 
 # Package for distribution
 cd ..
-zip -r yt-transcriptor-v1.0.0.zip yt-transcriptor-v1.0.0/
+zip -r yt-transcriptions-gui-v1.0.0.zip yt-transcriptions-gui-v1.0.0/
 ```
 
 ### GitHub Release

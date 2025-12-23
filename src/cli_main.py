@@ -18,9 +18,9 @@ def parse_arguments(args=None):
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  yt-transcriptor-cli "https://youtu.be/dQw4w9WgXcQ"
-  yt-transcriptor-cli "https://youtu.be/dQw4w9WgXcQ" --format srt
-  yt-transcriptor-cli "https://youtu.be/dQw4w9WgXcQ" --language en --output ./transcripts
+  yt-transcriptions-gui-cli "https://youtu.be/dQw4w9WgXcQ"
+  yt-transcriptions-gui-cli "https://youtu.be/dQw4w9WgXcQ" --format srt
+  yt-transcriptions-gui-cli "https://youtu.be/dQw4w9WgXcQ" --language en --output ./transcripts
         """
     )
 
@@ -50,7 +50,7 @@ Examples:
     return parser.parse_args(args)
 
 def main(args=None):
-    """Main CLI function for yt-transcriptor-cli."""
+    """Main CLI function for yt-transcriptions-gui-cli."""
     try:
         parsed_args = parse_arguments(args)
 

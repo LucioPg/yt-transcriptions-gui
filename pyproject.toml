@@ -1,5 +1,5 @@
 [project]
-name = "yt-transcriptor"
+name = "yt-transcriptions-gui"
 version = "0.1.0"
 description = "Extract YouTube video transcripts directly without downloading videos"
 requires-python = ">=3.13"
@@ -12,8 +12,8 @@ dependencies = [
 ]
 
 [project.scripts]
-yt-transcriptor-cli = "src.cli_main:main"
-yt-transcriptor-web = "src.web_main:main"
+yt-transcriptions-gui-cli = "src.cli_main:main"
+yt-transcriptions-gui-web = "src.web_main:main"
 
 [project.optional-dependencies]
 dev = [

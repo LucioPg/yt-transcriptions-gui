@@ -1,5 +1,5 @@
 {
-  "name": "yt-transcriptor",
+  "name": "yt-transcriptions-gui",
   "version": "1.0.0",
   "description": "[![Python 3.13+](https://img.shields.io/badge/python-3.13+-blue.svg)](https://www.python.org/downloads/)\r [![Test Coverage](https://img.shields.io/badge/coverage-88%25-green.svg)](htmlcov/index.html)\r [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)",
   "main": "index.js",

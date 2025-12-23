@@ -1,6 +1,6 @@
 # Development Guide
 
-This comprehensive guide provides everything developers need to know to work with the YouTube Transcriptor project.
+This comprehensive guide provides everything developers need to know to work with the YouTube Transcriptions GUI project.
 
 ## Table of Contents
 
@@ -27,8 +27,8 @@ This comprehensive guide provides everything developers need to know to work wit
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/your-username/yt-transcriptor.git
-   cd yt-transcriptor
+   git clone https://github.com/LucioPG/yt-transcriptions-gui.git
+   cd yt-transcriptions-gui
    ```
 
 2. **Set up Python environment**

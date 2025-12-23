@@ -1,4 +1,4 @@
-// YouTube Transcriptor Frontend Application
+// YouTube Transcriptions GUI Frontend Application
 
 // Tauri API for backend management
 const invoke = window.__TAURI__?.invoke;
@@ -181,7 +181,7 @@ transcriptForm.addEventListener('submit', async (e) => {
             const resultHtml = `
                 <div class="result-container">
                     <div class="video-info">
-                        <h3>📹 ${result.video_title}</h3>
+                        <h3><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#535dea" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-photo-search"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 8h.01" /><path d="M11.5 21h-5.5a3 3 0 0 1 -3 -3v-12a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v5.5" /><path d="M18 18m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" /><path d="M20.2 20.2l1.8 1.8" /><path d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l2 2" /></svg> ${result.video_title}</h3>
                         <div class="stats">
                             <div class="stat-item">
                                 <strong>Formato</strong><br>
@@ -194,13 +194,13 @@ transcriptForm.addEventListener('submit', async (e) => {
                         </div>
                     </div>
                     <div class="result-header">
-                        <h3>📝 Trascrizione</h3>
+                        <h3><svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="#535dea" class="icon icon-tabler icons-tabler-filled icon-tabler-player-track-next"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M2 5v14c0 .86 1.012 1.318 1.659 .753l8 -7a1 1 0 0 0 0 -1.506l-8 -7c-.647 -.565 -1.659 -.106 -1.659 .753z" /><path d="M13 5v14c0 .86 1.012 1.318 1.659 .753l8 -7a1 1 0 0 0 0 -1.506l-8 -7c-.647 -.565 -1.659 -.106 -1.659 .753z" /></svg> Trascrizione</h3>
                         <button id="copy-btn" style="height: 3rem;width: 6rem;">Copia</button>
                     </div>
                     <div class="transcript-content">${result.transcript}</div>
                     <div class="download-section">
                         <button id="download-btn" class="primary">
-                            💾 Scarica ${data.format_type.toUpperCase()}
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#535dea" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-download"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" /><path d="M7 11l5 5l5 -5" /><path d="M12 4l0 12" /></svg> Scarica ${data.format_type.toUpperCase()}
                         </button>
                         <a href="#" id="newExtraction" class="primary-link">← Nuova estrazione</a>
                     </div>

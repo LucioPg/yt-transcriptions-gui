@@ -1,11 +1,11 @@
-# YouTube Transcriptor Makefile
+# YouTube Transcriptions GUI Makefile
 # Provides convenient commands for development and testing
 
 .PHONY: help install test test-cov lint format clean build run docs setup
 
 # Default target
 help: ## Show this help message
-	@echo "YouTube Transcriptor Development Commands:"
+	@echo "YouTube Transcriptions GUI Development Commands:"
 	@echo ""
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2}'
 
@@ -86,10 +86,10 @@ build-web-exe: clean install-packaging-deps ## Create Windows executable for web
 		uv run pyinstaller --onefile --windowed \
 		--add-data "src/templates;templates" \
 		--add-data "src/static;static" \
-		--name "yt-transcriptor-web" \
+		--name "yt-transcriptions-gui-web" \
 		--icon=NONE \
 		src/web_main.py; \
-		echo "✓ Windows executable created in dist/yt-transcriptor-web.exe"; \
+		echo "Windows executable created in dist/yt-transcriptions-gui-web.exe"; \
 	else \
 		echo "uv not found. Please install uv first: https://github.com/astral-sh/uv"; \
 		exit 1; \
@@ -100,10 +100,10 @@ build-cli-exe: clean install-packaging-deps ## Create Windows executable for CLI
 	@echo "Note: This requires PyInstaller and packaging dependencies"
 	@if command -v uv >/dev/null 2>&1; then \
 		uv run pyinstaller --onefile \
-		--name "yt-transcriptor-cli" \
+		--name "yt-transcriptions-gui-cli" \
 		--console \
 		src/cli_main.py; \
-		echo "✓ Windows CLI executable created in dist/yt-transcriptor-cli.exe"; \
+		echo "Windows CLI executable created in dist/yt-transcriptions-gui-cli.exe"; \
 	else \
 		echo "uv not found. Please install uv first: https://github.com/astral-sh/uv"; \
 		exit 1; \
@@ -112,9 +112,9 @@ build-cli-exe: clean install-packaging-deps ## Create Windows executable for CLI
 build-all-exe: build-cli-exe build-web-exe ## Build both Windows executables
 
 test-exe: ## Test Windows executables (if they exist)
-	@if [ -f "dist/yt-transcriptor-cli.exe" ]; then \
+	@if [ -f "dist/yt-transcriptions-gui-cli.exe" ]; then \
 		echo "Testing CLI executable..."; \
-		dist/yt-transcriptor-cli.exe --help; \
+		dist/yt-transcriptions-gui-cli.exe --help; \
 	else \
 		echo "CLI executable not found. Run 'make build-cli-exe' first."; \
 	fi
@@ -139,15 +139,15 @@ docs: ## Generate documentation
 
 # Running the Application
 run: ## Run the CLI application with help
-	@echo "Running YouTube Transcriptor CLI..."
+	@echo "Running YouTube Transcriptions GUI CLI..."
 	uv run python -m src.cli_main --help
 
 run-cli: ## Run CLI interface
-	@echo "Running YouTube Transcriptor CLI..."
+	@echo "Running YouTube Transcriptions GUI CLI..."
 	uv run python -m src.cli_main --help
 
 run-web: ## Run web interface
-	@echo "Starting YouTube Transcriptor Web Interface..."
+	@echo "Starting YouTube Transcriptions GUI Web Interface..."
 	uv run python -m src.web_main
 
 run-example: ## Run CLI with example URL
@@ -180,7 +180,7 @@ watch-test: ## Watch for changes and run tests (requires watchdog)
 
 # Project Information
 info: ## Show project information
-	@echo "YouTube Transcriptor Project Information:"
+	@echo "YouTube Transcriptions GUI Project Information:"
 	@echo "======================================="
 	@echo "Python Version: $(shell python --version 2>/dev/null || echo 'Python not found')"
 	@echo "UV Version: $(shell uv --version 2>/dev/null || echo 'uv not found')"

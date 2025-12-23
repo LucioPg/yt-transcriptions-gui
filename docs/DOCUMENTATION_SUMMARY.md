@@ -1,10 +1,10 @@
 # Documentation Summary
 
-This document provides an overview of the comprehensive technical documentation that has been created for the YouTube Transcriptor project.
+This document provides an overview of the comprehensive technical documentation that has been created for the YouTube Transcriptions GUI project.
 
 ## 📋 Documentation Overview
 
-The YouTube Transcriptor project now has professional-grade documentation that covers all aspects of development, usage, and contribution. This documentation transforms the project from a simple educational tool into a well-documented, maintainable codebase suitable for collaborative development.
+The YouTube Transcriptions GUI project now has professional-grade documentation that covers all aspects of development, usage, and contribution. This documentation transforms the project from a simple educational tool into a well-documented, maintainable codebase suitable for collaborative development.
 
 ## 🏗️ Documentation Structure
 

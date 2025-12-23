@@ -1,10 +1,10 @@
 # Tauri Desktop Application
 
-This document describes the Tauri desktop application that provides a complete, self-contained YouTube Transcriptor experience.
+This document describes the Tauri desktop application that provides a complete, self-contained YouTube Transcriptions GUI experience.
 
 ## Overview
 
-The Tauri application is now the primary desktop interface for YouTube Transcriptor, automatically managing the Python backend internally while providing the exact same look and feel as the original web interface.
+The Tauri application is now the primary desktop interface for YouTube Transcriptions GUI, automatically managing the Python backend internally while providing the exact same look and feel as the original web interface.
 
 ## Architecture
 

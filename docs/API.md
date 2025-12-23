@@ -1,6 +1,6 @@
 # API Documentation
 
-This document provides detailed API documentation for the YouTube Transcriptor library, covering both core modules, the FastAPI web interface, and the CLI executable.
+This document provides detailed API documentation for the YouTube Transcriptions GUI library, covering both core modules, the FastAPI web interface, and the CLI executable.
 
 ## Table of Contents
 
@@ -290,14 +290,14 @@ Main CLI function that orchestrates the transcript extraction process.
 
 ## CLI API
 
-The CLI executable (`yt-transcriptor-cli.exe`) provides a command-line interface for transcript extraction with comprehensive argument parsing and error handling.
+The CLI executable (`yt-transcriptions-gui-cli.exe`) provides a command-line interface for transcript extraction with comprehensive argument parsing and error handling.
 
 ### Command Reference
 
 #### Basic Usage
 
 ```bash
-yt-transcriptor-cli.exe <URL> [OPTIONS]
+yt-transcriptions-gui-cli.exe <URL> [OPTIONS]
 ```
 
 #### Positional Arguments
@@ -366,7 +366,7 @@ if %ERRORLEVEL% EQU 0 (
 
 ```powershell
 # PowerShell example
-& "yt-transcriptor-cli.exe" "https://youtu.be/VIDEO_ID"
+& "yt-transcriptions-gui-cli.exe" "https://youtu.be/VIDEO_ID"
 if ($LASTEXITCODE -eq 0) {
     Write-Host "Success: Transcript extracted"
 } else {
@@ -380,7 +380,7 @@ if ($LASTEXITCODE -eq 0) {
 
 ```bash
 # Extract transcript in default format (TXT)
-yt-transcriptor-cli.exe "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+yt-transcriptions-gui-cli.exe "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
 ```
 
 **Output:**
@@ -396,37 +396,37 @@ Lines: 162
 
 ```bash
 # Extract as SRT subtitles
-yt-transcriptor-cli.exe "https://youtu.be/dQw4w9WgXcQ" --format srt
+yt-transcriptions-gui-cli.exe "https://youtu.be/dQw4w9WgXcQ" --format srt
 
 # Extract as VTT web subtitles
-yt-transcriptor-cli.exe "https://youtu.be/dQw4w9WgXcQ" -f vtt
+yt-transcriptions-gui-cli.exe "https://youtu.be/dQw4w9WgXcQ" -f vtt
 ```
 
 #### Language Selection
 
 ```bash
 # Extract English transcript specifically
-yt-transcriptor-cli.exe "https://youtu.be/dQw4w9WgXcQ" --language en
+yt-transcriptions-gui-cli.exe "https://youtu.be/dQw4w9WgXcQ" --language en
 
 # Extract Spanish transcript
-yt-transcriptor-cli.exe "https://youtu.be/dQw4w9WgXcQ" -l es
+yt-transcriptions-gui-cli.exe "https://youtu.be/dQw4w9WgXcQ" -l es
 ```
 
 #### Custom Output Directory
 
 ```bash
 # Save to custom directory
-yt-transcriptor-cli.exe "https://youtu.be/dQw4w9WgXcQ" --output "C:\My Documents\Transcripts"
+yt-transcriptions-gui-cli.exe "https://youtu.be/dQw4w9WgXcQ" --output "C:\My Documents\Transcripts"
 
 # Save to relative directory
-yt-transcriptor-cli.exe "https://youtu.be/dQw4w9WgXcQ" -o ./subtitles
+yt-transcriptions-gui-cli.exe "https://youtu.be/dQw4w9WgXcQ" -o ./subtitles
 ```
 
 #### Combined Options
 
 ```bash
 # All options together
-yt-transcriptor-cli.exe "https://youtu.be/dQw4w9WgXcQ" \
+yt-transcriptions-gui-cli.exe "https://youtu.be/dQw4w9WgXcQ" \
   --format srt \
   --language en \
   --output "C:\Subtitles"
@@ -436,11 +436,11 @@ yt-transcriptor-cli.exe "https://youtu.be/dQw4w9WgXcQ" \
 
 ```bash
 # Invalid URL
-yt-transcriptor-cli.exe "not-a-url"
+yt-transcriptions-gui-cli.exe "not-a-url"
 # Output: Error: Invalid YouTube URL: not-a-url
 
 # Video without transcript
-yt-transcriptor-cli.exe "https://youtu.be/VIDEO_WITH_NO_CAPTIONS"
+yt-transcriptions-gui-cli.exe "https://youtu.be/VIDEO_WITH_NO_CAPTIONS"
 # Output: Error: No transcript available for this video
 ```
 
@@ -448,12 +448,12 @@ yt-transcriptor-cli.exe "https://youtu.be/VIDEO_WITH_NO_CAPTIONS"
 
 ```bash
 # Show help message
-yt-transcriptor-cli.exe --help
+yt-transcriptions-gui-cli.exe --help
 ```
 
 **Output:**
 ```
-usage: yt-transcriptor-cli.exe [-h] [--format {txt,srt,vtt}] [--language LANGUAGE]
+usage: yt-transcriptions-gui-cli.exe [-h] [--format {txt,srt,vtt}] [--language LANGUAGE]
                                [--output OUTPUT]
                                url
 
@@ -472,9 +472,9 @@ options:
                         Output directory (default: transcriptions)
 
 Examples:
-  yt-transcriptor-cli.exe "https://youtu.be/dQw4w9WgXcQ"
-  yt-transcriptor-cli.exe "https://youtu.be/dQw4w9WgXcQ" --format srt
-  yt-transcriptor-cli.exe "https://youtu.be/dQw4w9WgXcQ" --language en --output ./transcripts
+  yt-transcriptions-gui-cli.exe "https://youtu.be/dQw4w9WgXcQ"
+  yt-transcriptions-gui-cli.exe "https://youtu.be/dQw4w9WgXcQ" --format srt
+  yt-transcriptions-gui-cli.exe "https://youtu.be/dQw4w9WgXcQ" --language en --output ./transcripts
 ```
 
 ### CLI Integration Examples
@@ -485,14 +485,14 @@ Examples:
 @echo off
 echo Processing multiple videos...
 
-yt-transcriptor-cli.exe "https://www.youtube.com/watch?v=VIDEO1" --format srt
+yt-transcriptions-gui-cli.exe "https://www.youtube.com/watch?v=VIDEO1" --format srt
 if %ERRORLEVEL% EQU 0 (
     echo ✓ VIDEO1 processed successfully
 ) else (
     echo ✗ VIDEO1 failed
 )
 
-yt-transcriptor-cli.exe "https://www.youtube.com/watch?v=VIDEO2" --format txt
+yt-transcriptions-gui-cli.exe "https://www.youtube.com/watch?v=VIDEO2" --format txt
 if %ERRORLEVEL% EQU 0 (
     echo ✓ VIDEO2 processed successfully
 ) else (
@@ -512,7 +512,7 @@ $outputDir = "C:\Transcripts"
 foreach ($url in $urls) {
     Write-Host "Processing: $url"
 
-    $process = Start-Process -FilePath "yt-transcriptor-cli.exe" -ArgumentList $url, "--output", $outputDir -Wait -PassThru
+    $process = Start-Process -FilePath "yt-transcriptions-gui-cli.exe" -ArgumentList $url, "--output", $outputDir -Wait -PassThru
 
     if ($process.ExitCode -eq 0) {
         Write-Host "✓ Success: $url" -ForegroundColor Green
@@ -531,7 +531,7 @@ import json
 def extract_transcript_cli(url, format_type="txt", language=None, output_dir=None):
     """Extract transcript using CLI executable."""
 
-    cmd = ["yt-transcriptor-cli.exe", url]
+    cmd = ["yt-transcriptions-gui-cli.exe", url]
 
     if format_type:
         cmd.extend(["--format", format_type])
@@ -618,7 +618,7 @@ FastAPI web application module providing browser-based transcript extraction int
 FastAPI application instance with configuration:
 
 **Parameters:**
-- `title`: "YouTube Transcriptor"
+- `title`: "YouTube Transcriptions GUI"
 - `description`: "Extract YouTube video transcripts directly without downloading videos"
 - `version`: "1.0.0"
 - `lifespan`: Application lifespan manager for cleanup
@@ -692,7 +692,7 @@ Health check endpoint for monitoring.
 ```json
 {
   "status": "healthy",
-  "service": "YouTube Transcriptor"
+  "service": "YouTube Transcriptions GUI"
 }
 ```
 
@@ -750,7 +750,7 @@ Temporary directory for file downloads with automatic cleanup.
 
 ## Web API Endpoints
 
-The YouTube Transcriptor web interface provides a RESTful API built on FastAPI. All endpoints return HTML responses for browser compatibility.
+The YouTube Transcriptions GUI web interface provides a RESTful API built on FastAPI. All endpoints return HTML responses for browser compatibility.
 
 ### Base URL
 ```
@@ -887,7 +887,7 @@ Health check endpoint for monitoring and load balancers.
 ```json
 {
   "status": "healthy",
-  "service": "YouTube Transcriptor"
+  "service": "YouTube Transcriptions GUI"
 }
 ```
 
@@ -896,7 +896,7 @@ Health check endpoint for monitoring and load balancers.
 curl http://localhost:8000/health
 
 # Response
-{"status":"healthy","service":"YouTube Transcriptor"}
+{"status":"healthy","service":"YouTube Transcriptions GUI"}
 ```
 
 ### URL Formats Supported
@@ -950,7 +950,7 @@ Health check returns JSON:
 ```json
 {
   "status": "healthy",
-  "service": "YouTube Transcriptor"
+  "service": "YouTube Transcriptions GUI"
 }
 ```
 

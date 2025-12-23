@@ -1,6 +1,6 @@
-# Contributing to YouTube Transcriptor
+# Contributing to YouTube Transcriptions GUI
 
-Thank you for your interest in contributing to YouTube Transcriptor! This document provides guidelines and instructions for contributors.
+Thank you for your interest in contributing to YouTube Transcriptions GUI! This document provides guidelines and instructions for contributors.
 
 ## Table of Contents
 
@@ -22,8 +22,8 @@ Thank you for your interest in contributing to YouTube Transcriptor! This docume
 
 1. **Fork and clone the repository**
    ```bash
-   git clone https://github.com/your-username/yt-transcriptor.git
-   cd yt-transcriptor
+   git clone https://github.com/LucioPG/yt-transcriptions-gui.git
+   cd yt-transcriptions-gui
    ```
 
 2. **Set up the development environment**
