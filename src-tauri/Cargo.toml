@@ -1,7 +1,7 @@
 [package]
-name = "yt-transcriptor"
+name = "yt-transcriptions-gui"
 version = "0.1.0"
-description = "YouTube Transcriptor - Estrai trascrizioni da video YouTube"
+description = "YouTube Transcriptions GUI- Estrai trascrizioni da video YouTube"
 authors = ["yt-transcriptor"]
 edition = "2021"
 
