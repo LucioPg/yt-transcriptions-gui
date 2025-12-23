@@ -11,7 +11,7 @@ tauri-build = { version = "2.1", features = [] }
 [dependencies]
 tauri = { version = "2.1", features = ["devtools"] }  # Minimal features for production
 tauri-plugin-shell = "2.3"
-# tauri-plugin-dialog = "2.4" # Temporarily disabled to fix TaskDialogIndirect issue
+tauri-plugin-dialog = "2.4"
 # tauri-plugin-updater = "2.9" # Temporarily disabled
 # tauri-plugin-process = "2.3" # Temporarily disabled
 tauri-plugin-single-instance = "2.3"

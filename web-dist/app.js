@@ -251,16 +251,51 @@ function showResults(content, success) {
     }
 }
 
-function downloadTranscript(filename, content, format) {
-    const blob = new Blob([content], {type: 'text/plain;charset=utf-8'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+async function downloadTranscript(filename, content, format) {
+    try {
+        const { invoke } = window.__TAURI__?.core || {};
+
+        if (!invoke) {
+            // Fallback for development (not in Tauri)
+            const blob = new Blob([content], {type: 'text/plain;charset=utf-8'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            return;
+        }
+
+        // Use Tauri dialog plugin to open save dialog
+        const { save } = window.__TAURI__?.dialog || {};
+
+        if (!save) {
+            throw new Error('Dialog plugin not available');
+        }
+
+        const filePath = await save({
+            defaultPath: filename,
+            filters: [{
+                name: format.toUpperCase() + ' files',
+                extensions: [format]
+            }]
+        });
+
+        if (filePath) {
+            // Save file using Rust command
+            await invoke('save_file', {
+                path: filePath,
+                content: content
+            });
+            showNotification('File salvato con successo', 'success');
+        }
+    } catch (error) {
+        console.error('Download error:', error);
+        showNotification('Errore durante il salvataggio: ' + error.message, 'error');
+    }
 }
 
 function copyToClipboard(text) {

@@ -8,6 +8,7 @@ use std::sync::{Arc, Mutex};
 use std::thread;
 use std::time::Duration;
 use tauri::{AppHandle, Emitter, Manager, State};
+use std::fs;
 
 // Embed the backend executable as bytes from dist directory
 #[cfg(target_os = "windows")]
@@ -356,9 +357,16 @@ async fn stop_backend_for_update(state: State<'_, AppState>) -> Result<(), Strin
     state.stop_backend()
 }
 
+#[tauri::command]
+async fn save_file(path: String, content: String) -> Result<(), String> {
+    fs::write(&path, content)
+        .map_err(|e| format!("Failed to save file: {}", e))
+}
+
 fn main() {
     tauri::Builder::default()
         .plugin(tauri_plugin_shell::init())
+        .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_single_instance::init(|_app, argv, cwd| {
             println!("Single instance triggered: argv={:?}, cwd={:?}", argv, cwd);
         }))
@@ -410,7 +418,8 @@ fn main() {
             check_backend_status,
             get_backend_url,
             restart_backend,
-            stop_backend_for_update
+            stop_backend_for_update,
+            save_file
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
