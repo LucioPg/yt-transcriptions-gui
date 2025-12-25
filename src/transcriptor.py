@@ -18,7 +18,13 @@ class InvalidVideoURLError(Exception):
 
 def get_transcript(video_url: str, language: str = None):
     """
-    Extract transcript from YouTube video.
+    Extract transcript from YouTube video with simple language fallback.
+
+    Language resolution:
+    1. Try specified language (if provided)
+    2. Try 'en' (English)
+    3. Try 'it' (Italian) as fallback
+    4. Raise "Can not fetch" error if all attempts fail
 
     Args:
         video_url: YouTube video URL
@@ -29,39 +35,30 @@ def get_transcript(video_url: str, language: str = None):
 
     Raises:
         InvalidVideoURLError: If URL is not valid YouTube URL
-        NoTranscriptAvailableError: If no transcript is available
+        NoTranscriptAvailableError: If no transcript can be fetched
     """
     if not validate_youtube_url(video_url):
         raise InvalidVideoURLError(f"Invalid YouTube URL: {video_url}")
 
-    try:
-        # Extract video ID from URL
-        video_id = _extract_video_id(video_url)
+    video_id = _extract_video_id(video_url)
+    api = YouTubeTranscriptApi()
 
-        # Try to get transcript with language preference
-        api = YouTubeTranscriptApi()
+    # Determine languages to try in order
+    languages_to_try = []
+    if language:
+        languages_to_try.append(language)
+    languages_to_try.extend(['en', 'it'])
 
-        if language:
-            # Try to get transcript in specified language
-            try:
-                return api.fetch(video_id, languages=[language])
-            except:
-                pass
-
-        # Get transcript in default language (English)
+    # Try each language in sequence
+    for lang in languages_to_try:
         try:
-            return api.fetch(video_id)
-        except Exception as e:
-            if "No transcripts found" in str(e) or "Video unavailable" in str(e):
-                raise NoTranscriptAvailableError(f"No transcript available: {str(e)}")
-            else:
-                raise  # Re-raise unexpected errors
+            return api.fetch(video_id, languages=[lang])
+        except Exception:
+            # Try next language
+            continue
 
-    except Exception as e:
-        if "No transcripts found" in str(e) or "Video unavailable" in str(e):
-            raise NoTranscriptAvailableError(f"No transcript available: {str(e)}")
-        else:
-            raise  # Re-raise unexpected errors
+    # All attempts failed
+    raise NoTranscriptAvailableError("Can not fetch transcript")
 
 def _extract_video_id(url: str) -> str:
     """Extract video ID from YouTube URL."""

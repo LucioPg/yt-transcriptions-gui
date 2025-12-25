@@ -5668,7 +5668,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "yt-transcriptor"
+name = "yt-transcriptions-gui"
 version = "0.1.0"
 dependencies = [
  "reqwest",

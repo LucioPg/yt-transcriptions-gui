@@ -9,11 +9,13 @@ dependencies = [
     "python-multipart>=0.0.20",
     "uvicorn>=0.38.0",
     "youtube-transcript-api>=1.2.3",
+    "mcp>=1.2.0",
 ]
 
 [project.scripts]
 yt-transcriptions-gui-cli = "src.cli_main:main"
 yt-transcriptions-gui-web = "src.web_main:main"
+yt-transcriptions-mcp = "src.mcp_server:main"
 
 [project.optional-dependencies]
 dev = [

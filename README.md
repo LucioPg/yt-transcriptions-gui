@@ -13,6 +13,7 @@ A Python tool that extracts YouTube video transcripts directly without downloadi
 - **Language Selection**: Manual language override or auto-detection
 - **File Management**: Automatic filename generation based on video title
 - **Web Interface**: Simple interface using FastAPI and Jinja2 templates
+- **MCP Server**: Model Context Protocol server for integration with Claude Code
 - **Error Handling**: Comprehensive error handling with clear messages
 
 ## Requirements
@@ -59,6 +60,75 @@ uv run python -m src.web_main
 # - Start the server on http://localhost:8031
 # - Open the browser automatically
 # - Save transcripts to ~/yt-transcriptions/
+```
+
+### MCP Server (Model Context Protocol)
+
+The MCP server allows you to use YouTube transcript extraction directly within Claude Code through the Model Context Protocol.
+
+#### Installing in Claude Code
+
+1. **Install the project dependencies:**
+
+```bash
+cd /path/to/yt-transcriptions-gui
+uv sync
+```
+
+2. **Add the MCP server to Claude Code configuration:**
+
+Create or edit the Claude Code MCP configuration file (typically located at `~/.config/claude-code/mcp_config.json` on Linux/macOS or `%APPDATA%\claude-code\mcp_config.json` on Windows):
+
+```json
+{
+  "mcpServers": {
+    "yt-transcriptions": {
+      "command": "uv",
+      "args": [
+        "run",
+        "--directory",
+        "/absolute/path/to/yt-transcriptions-gui",
+        "python",
+        "-m",
+        "src.mcp_server"
+      ],
+      "env": {}
+    }
+  }
+}
+```
+
+Replace `/absolute/path/to/yt-transcriptions-gui` with the actual path to the project directory.
+
+3. **Restart Claude Code** to load the MCP server.
+
+#### Usage in Claude Code
+
+Once installed, you can extract YouTube transcripts directly in conversations:
+
+```
+Please extract the transcript from https://www.youtube.com/watch?v=VIDEO_ID
+```
+
+The MCP server provides the following tool:
+
+- **`get_transcript`**: Extract transcript from YouTube video
+  - `url` (required): YouTube video URL
+  - `format` (optional): Output format - `txt` (default), `vtt`, or `srt`
+  - `language` (optional): Language code (e.g., `en`, `it`, `es`)
+
+#### Example Usage
+
+```python
+# The tool returns structured data:
+{
+  "video_url": "https://www.youtube.com/watch?v=...",
+  "video_title": "Video Title",
+  "content": "Full transcript text...",
+  "language": "en",
+  "format": "txt",
+  "segments_count": 150
+}
 ```
 
 ## Command Options
@@ -113,6 +183,8 @@ YouTube Transcriptions GUI
 │   └── Command-line interface for advanced users
 ├── Web Interface (web_main.py)
 │   └── Web interface with FastAPI
+├── MCP Server (mcp_server.py)
+│   └── Model Context Protocol server for Claude Code integration
 └── Core Logic
     ├── transcriptor.py: YouTube API integration
     ├── file_handler.py: File operations
@@ -156,6 +228,7 @@ yt-transcriptions-gui/
 ├── src/                     # Source code
 │   ├── cli_main.py         # CLI entry point
 │   ├── web_main.py         # Web entry point
+│   ├── mcp_server.py       # MCP server for Claude Code integration
 │   ├── transcriptor.py     # Core transcript extraction
 │   ├── file_handler.py     # File operations and formatting
 │   ├── utils.py            # Utility functions
@@ -174,6 +247,7 @@ yt-transcriptions-gui/
 - **uvicorn**: ASGI server
 - **jinja2**: Template engine
 - **youtube-transcript-api**: YouTube transcript extraction
+- **mcp**: Model Context Protocol for Claude Code integration
 
 ### Development Dependencies
 - **pytest**: Testing framework
